@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% block css %}
+<style>
+    body {
+        background-color: black;
+        overflow: hidden;
+    }
+
+    .mac-center {
+        position: relative;
+        top: -320px;
+        left: 200px;
+        width: 60%;
+    }
+</style>
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-1 col-sm-4">
+            <div class="card-header bg-transparent text-white text-center">
+                <h5>Login to access your summarization platform Email</h5>
+            </div>
+            <div class="card" style="background-color: rgb(247, 248, 247);">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputUsername">Username</label>
+                            <input type="text" name="username" class="form-control" id="exampleInputUsername" placeholder="Username" required="required" onchange="valid()">
+                           
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                else.</small>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div>
+                        <div class="align-right ml-auto">
+                           <a href="pass"> 
+                                <img src="/static/images/forward.png" class="i" id="next" width="10%" alt="next" align="right" onclick="validation()">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+    function valid(){
+        user = document.getElementById("exampleInputUsername")
+        if(user=="")
+        {
+            alert("Field is empty!")
+           document.getElementById("next").style.display="none"
+        }
+    }
+    function validation()
+    {
+       user = document.getElementById("exampleInputUsername")
+       pass = document.getElementById("exampleInputEmail1")
+       if ((user=="") && (pass=""))
+       {
+           alert("Field is empty!")
+           document.getElementById("next").style.display="none"
+       }
+       
+     $(document).ready(function(){
+        $('#exampleInputUsername').bootstrapValidator({
+          fields: {
+               username: {
+                   validators: {
+                      regexp: {
+                        regexp: /^[a-z\s]+$/i,
+                        message: 'The full name can consist of alphabetical characters and spaces only'
+                        }
+                    }
+                }
+            }
+            });
+        });
+    }
+</script>
+{% endblock %}

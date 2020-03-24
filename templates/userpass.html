@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+{% block css %}
+<style>
+.picgrid{
+    height: 520px !important;
+    width: 580px !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('/static/images/pass_image_7');
+    background-color: black;
+    padding: 0;
+    background-position: center;
+}
+ .picgrid .box{
+        margin:0;
+        display: inline-block;
+        padding: 0;
+        height: 32px;
+        width: 32px;
+        border:none;
+        outline: none;
+        background-color: rgba(0,0,0,0);
+        border-radius: 50%;
+        font-size: .3rem;
+        color: rgba(0,0,0,0);
+        
+    }
+    .picgrid .box:hover{
+        box-shadow: 0px 0px 5px #fff;
+        color: blanchedalmond !important;
+        
+    }
+    .resolution{
+        image-resolution: 40dpi;
+        height: 80px;
+        width: 100px;
+        margin: 0px;
+        }
+</style>
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 p-0 m-3 center">           
+            <div class="picgrid"> 
+                {% for i in range(16) %}
+                {% for j in range(16) %}
+                <button class="box text-dark text-center">{{i+1}},{{j+1}}</button>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class"margin-right">
+            <a class="nav-link" href="main">
+                <img src="/static/images/forward.png" class="i" width="10%" alt="next" align="right">
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(function () {
+        let sequence = new Array()
+        $('.box').each(function(index){
+            $(this).click(function(){
+                $(this).css({'background-color':'olive'});
+                $(this).disabled()
+                sequence.push(index);
+                console.log(sequence)          
+            });
+        });
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,141 @@
+{% extends 'layout.html' %}
+{% block css %}
+<style>
+    .border {
+        border: 1px solid black;
+        height: 400px;
+        margin-top: 20px;
+        margin-left: 20px;
+        margin-right: 2px;
+    }
+    .image-list {
+        border: 5px dashed green;
+        height: 120px;
+        margin-top: 40px;
+        margin-left: 10px;
+    }
+    .picgrid{
+        height: 520px !important;
+        width: 580px !important;
+        background-image: url('/static/images/pass_image_1.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        
+        background-color: black;
+        padding: 0;
+        background-position: center;
+    }
+    .picgrid .box{
+        margin:0;
+        display: inline-block;
+        padding: 0;
+        height: 32px;
+        width: 32px;
+        border:none;
+        outline: none;
+        background-color: rgba(0,0,0,0);
+        border-radius: 50%;
+        font-size: .3rem;
+        color: rgba(0,0,0,0);
+        
+    }
+    .picgrid .box:hover{
+        box-shadow: 0px 0px 5px #fff;
+        color: blanchedalmond !important;
+        
+    }
+    .resolution{
+        image-resolution: 40dpi;
+        height: 80px;
+        width: 100px;
+        margin: 0px;
+    }
+    .product-slider #thumbcarousel { margin: 12px 0 0; padding: 0 45px; }
+    
+    .product-slider #thumbcarousel .item { text-align: center; }
+    
+    .product-slider #thumbcarousel .item .thumb { border: 4px solid #cecece; width: 20%; margin: 0 2%; display: inline-block; vertical-align: middle; cursor: pointer; max-width: 98px; }
+    
+    .product-slider #thumbcarousel .item .thumb:hover { border-color: #1089c0; }
+    
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div  class="col-6 p-0 m-3">           
+            
+            <div  class="picgrid">           
+                {% for i in range(16) %}
+                {% for j in range(16) %}
+                <button class="box text-dark text-center">{{i+1}},{{j+1}}</button>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col product-slider">
+            <div id="thumbcarousel" class="carousel slide" data-interval="false">
+                <div class="carousel-inner">
+                    <div class="item p-2 active">
+                        <div data-target="#carousel" data-slide-to="0" class="thumb"><a><img src="/static/images/pass_image_2.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="2" class="thumb"><a><img src="/static/images/pass_image_3.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="3" class="thumb"><a><img src="/static/images/pass_image_4.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="4" class="thumb"><a><img src="/static/images/pass_image_9.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                    </div>
+                    <div class="item p-2 ">
+                        <div data-target="#carousel" data-slide-to="5" class="thumb"><a><img src="/static/images/pass_image_5.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="6" class="thumb"><a><img src="/static/images/pass_image_6.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="7" class="thumb"><a><img src="/static/images/pass_image_7.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                        <div data-target="#carousel" data-slide-to="8" class="thumb"><a><img src="/static/images/pass_image_8.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
+                    </div>
+                </div>
+                <!-- /carousel-inner --> 
+                <a class="left carousel-control" href="#thumbcarousel" role="button" data-slide="prev"> <i class="fa fa-angle-left" aria-hidden="true"></i> </a> 
+                <a class="right carousel-control" href="#thumbcarousel" role="button" data-slide="next"><i class="fa fa-angle-right" aria-hidden="true"></i> </a>
+            </div><pre></pre>
+            <div class="col-10">
+                <h3>Instructions:</h3>
+                <ul>
+                    <li> Choose a image from the above list</li>
+                    <li> Select any pattern/points.</li>
+                    <li> Then Go to next</li>
+                </ul>
+            </div>
+            <div class"margin-right">
+                <a class="nav-link" href="confirm">
+                    <img src="/static/images/forward.png" class="i" width="10%" alt="next" align="right">
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    {% endblock %}
+    {% block js %}
+    <script>
+        $(function () {
+            let sequence = new Array()
+            $('.box').each(function(index){
+                $(this).click(function(){
+                    if ($(this).hasClass('chosen')){
+                        $(this).css({'background-color':'transparent'});
+                        $(this).removeClass('chosen');
+                        sequence.pop(index);
+                    }else{
+                        $(this).css({'background-color':'olive'});
+                        $(this).addClass('chosen')
+                        sequence.push(index);
+                        
+                    }
+                    console.log(sequence)
+                        
+                });
+            });
+        });
+        function change_src(path){
+            $(document).ready(function(){
+                $('.picgrid').css("background-image", "url(" + path + ")");
+            });
+        }
+    </script>
+    {% endblock %}

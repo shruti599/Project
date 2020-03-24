@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block cs %}
+
+
+{% endblock %}
+{% block body %}
+<div class="form-group">
+    <label for="results">Results</label>
+    {% if results %}
+    <textarea class="form-control" name="results" id="results" rows="8" cols="8">{{results['summary']}}</textarea>
+    {% endif %}
+</div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}

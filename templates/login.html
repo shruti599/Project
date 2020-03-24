@@ -1,0 +1,33 @@
+
+  {% extends 'layout.html' %}
+
+  {% block body %}
+  <div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-1 col-sm-4">
+            <div class="card-header bg-transparent text-white text-center">
+                  <h5>Login to access your summarization platform Email</h5>
+            </div>
+            <div class="card" style="background-color: rgb(247, 248, 247);">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail">E-mail</label>
+                            <input type="text" name="username" class="form-control" id="exampleInputUsername"
+                                placeholder="Username">
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Log me in</label>
+                        </div>
+                        <div class="align-right ml-auto">
+                            <a href="pass">
+                                <img src="/static/images/forward.png" class="i" width="10%" alt="next" align="right">
+                            </a>
+                        </div>
+                     </form>
+                 </div>
+         </div>
+     </div>
+ </div>
+{% endblock %}

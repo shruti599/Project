@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block css %}
+<style>
+    body {
+        background-color: black;
+        overflow: hidden;
+    }
+
+    .mac-center {
+        position: relative;
+        top: -320px;
+        left: 200px;
+        width: 60%;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-1 col-sm-4">
+            <div class="card-header bg-transparent text-white text-center">
+                <h5>Admin LogIn</h5>
+            </div>
+            <div class="card" style="background-color: rgb(247, 248, 247);">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputUsername">Username</label>
+                            <input type="text" name="username" class="form-control" id="exampleInputUsername" placeholder="Username" required="required" onchange="valid()">
+                           
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword">Password</label>
+                            <input type="password" name="password" class="form-control" id="exampleInputPassword" aria-describedby="emailHelp" placeholder="Enter password" required>
+                            
+                        </div>
+            
+                        <div class="align-right ml-auto">
+                           <a role="button" href="pass1"> 
+                                <img src="/static/images/forward.png" class="i" id="next" width="10%" alt="next" align="right" onclick="validation()">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
