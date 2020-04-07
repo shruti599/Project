@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+<div class="card-deck">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Profile Photo</h5>
+      <img class="card-img-top" src="/static/images/user.png" alt="Image">
+      <a href="#" class="btn btn-primary">Upload</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">General Information</h5>
+      <form>
+        <div class="form-group">
+            <input type="text" name="firstname" class="form-control" id="exampleInputUsername" placeholder="First name" required="required">
+        </div>
+        <div class="form-group">
+          <input type="text" name="lastname" class="form-control" id="exampleInputUsername" placeholder="Last name" required="required">
+        </div>
+        <div class="form-group">
+            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="number" class="form-control" id="exampleInputNumber" placeholder="Phone Number" required="required">
+      </div>
+    </form>
+      <a href="#" class="btn btn-primary">Validate</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Change Password</h5>
+      <div class="form-group">
+          <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Old Password" required>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="New Password" required>
+    </div>
+    <div class="form-group">
+      <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Confirm Password" required>
+  </div>
+      <a href="#" class="btn btn-primary">Change</a>
+      <a href="#" class="btn btn-primary">Delete Account</a>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
