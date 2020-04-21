@@ -132,10 +132,9 @@ def register():
     errors = ''
     if request.method == "GET": # If the request is GET, render the form template.
         return render_template("registration.html", errors=errors)
-     else: 
+    else: 
         # The request is POST with some data, get POST data and validate it.
-        # The form data is available in request.form dictionary. Stripping it to remove
-        # leading and trailing whitespaces
+        #  Stripping it to remove leading and trailing whitespaces
         email = request.form['email'].strip()
         username = request.form['username'].strip()
         # Check if all the fields are non-empty and raise an error otherwise
@@ -145,10 +144,9 @@ def register():
             # Validate the email address and raise an error if it is invalid
             if not is_email_address_valid(email):
                 errors = errors + "Please enter a valid email address"
-        if not errors:
-            #if email exits then send password to that mail & store it in db
-            
-        return render_template('registration.html')
+        #if not errors:
+            #if email exits then send password to that mail & store it in db      
+    return render_template('registration.html',errors=errors)
 
 @app.route('/login')
 def about():

@@ -5,7 +5,7 @@
         background-color: black;
         overflow: hidden;
     }
-
+    
     .mac-center {
         position: relative;
         top: -320px;
@@ -25,35 +25,32 @@
             </div>
             <div class="card" style="background-color: rgb(247, 248, 247);">
                 <div class="card-body">
-                    <form>
+                    <form method="POST" enctype="multipart/form-data"> 
                         <div class="form-group">
-                            <label for="exampleInputUsername">Username</label>
-                            <input type="text" name="username" class="form-control" id="exampleInputUsername" placeholder="Username" required="required" onchange="valid()">
-                           
+                            <label for="username">Username</label>
+                            <input type="text" name="username" class="form-control" id="username" placeholder="Username" required onchange="valid()">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                                else.</small>
+                            <label for="mail">Email address</label>
+                            <input type="email" name="mail" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyoneelse.</small>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>
-                        <div class="align-right ml-auto">
-                           <a href="pass"> 
-                                <img src="/static/images/forward.png" class="i" id="next" width="10%" alt="next" align="right" onclick="validation()">
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                        <a href="pass" onclick="validation()" id="next"> 
+                            <img src="/static/images/forward.png" class="i" id="next_image" width="10%" alt="next" align="right">
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="col-sm-6">
-            <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
-        </div>
     </div>
+    <div class="col-sm-6">
+        <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
+    </div>
+</div>
 </div>
 
 {% endblock %}
@@ -61,39 +58,58 @@
 {% block js %}
 
 <script>
-
+    
     function valid(){
-        user = document.getElementById("exampleInputUsername")
+        user = document.getElementById("username")
         if(user=="")
         {
             alert("Field is empty!")
-           document.getElementById("next").style.display="none"
+            document.getElementById("next").style.display="none"
         }
     }
     function validation()
     {
-       user = document.getElementById("exampleInputUsername")
-       pass = document.getElementById("exampleInputEmail1")
-       if ((user=="") && (pass=""))
-       {
-           alert("Field is empty!")
-           document.getElementById("next").style.display="none"
-       }
-       
-     $(document).ready(function(){
-        $('#exampleInputUsername').bootstrapValidator({
-          fields: {
-               username: {
-                   validators: {
-                      regexp: {
-                        regexp: /^[a-z\s]+$/i,
-                        message: 'The full name can consist of alphabetical characters and spaces only'
+        count=0
+        user = document.getElementById("username")
+        mail = document.getElementById("mail")
+        if ((user=="") && (mail==""))
+        {
+            alert("Field is empty!")
+            count++
+            //document.getElementById("next").style.display="none"
+        }
+        if (count>0){
+            $(document).ready(function(){
+                $('#next').click(function(){
+                    return false;
+                });
+            });
+        }
+        else
+        {
+            $(document).ready(function(){
+                $('#next').click(function(){
+                    return true;
+                });
+            });
+            
+            $(document).ready(function(){
+                $('#username').bootstrapValidator({
+                    fields: {
+                        username: {
+                            validators: {
+                                regexp: {
+                                    regexp: /^[a-z\s]+$/i,
+                                    message: 'The full name can consist of alphabetical characters and spaces only'
+                                }
+                            }
                         }
                     }
-                }
-            }
+                });
             });
-        });
+        }
+        
     }
+    
 </script>
 {% endblock %}
