@@ -28,7 +28,7 @@
                     <form method="POST" enctype="multipart/form-data"> 
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" name="username" class="form-control" id="username" placeholder="Username" required onchange="valid()">
+                            <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
                         </div>
                         <div class="form-group">
                             <label for="mail">Email address</label>
@@ -39,18 +39,19 @@
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>
-                        <a href="pass" onclick="validation()" id="next"> 
-                            <img src="/static/images/forward.png" class="i" id="next_image" width="10%" alt="next" align="right">
-                        </a>
-                    </div>
-                </form>
+                        <div>
+                            <a href="pass" onclick="validation()"> 
+                                <img src="/static/images/forward.png" class="i" id="next_image" width="10%" alt="next" align="right">
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        <div class="col-sm-6">
+            <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
+        </div>
     </div>
-    <div class="col-sm-6">
-        <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
-    </div>
-</div>
 </div>
 
 {% endblock %}
@@ -59,57 +60,38 @@
 
 <script>
     
-    function valid(){
-        user = document.getElementById("username")
-        if(user=="")
-        {
-            alert("Field is empty!")
-            document.getElementById("next").style.display="none"
-        }
-    }
     function validation()
     {
-        count=0
         user = document.getElementById("username")
         mail = document.getElementById("mail")
-        if ((user=="") && (mail==""))
-        {
-            alert("Field is empty!")
-            count++
-            //document.getElementById("next").style.display="none"
-        }
-        if (count>0){
-            $(document).ready(function(){
-                $('#next').click(function(){
-                    return false;
-                });
-            });
-        }
-        else
-        {
-            $(document).ready(function(){
-                $('#next').click(function(){
-                    return true;
-                });
-            });
-            
-            $(document).ready(function(){
-                $('#username').bootstrapValidator({
-                    fields: {
-                        username: {
-                            validators: {
-                                regexp: {
-                                    regexp: /^[a-z\s]+$/i,
-                                    message: 'The full name can consist of alphabetical characters and spaces only'
+        $(document).ready(function(){
+            $('#next').click(function(){
+                if ((user=="") && (mail==""))
+                {
+                    alert("Field is empty!")
+                    return false;  
+                }
+                else
+                {
+                    $(document).ready(function(){
+                        $('#username').bootstrapValidator({
+                            fields: {
+                                username: {
+                                    validators: {
+                                        regexp: {
+                                            regexp: /^[a-z\s]+$/i,
+                                            message: 'The full name can consist of alphabetical characters and spaces only'
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                });
+                        });
+                    });
+                    return true;
+                }
             });
-        }
-        
+        });   
     }
-    
+
 </script>
 {% endblock %}
