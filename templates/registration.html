@@ -12,6 +12,9 @@
         left: 200px;
         width: 60%;
     }
+    .shifting{
+        align-items: right;
+    }
 </style>
 
 {% endblock %}
@@ -39,13 +42,14 @@
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>
-                        <div>
-                            <a href="pass" onclick="validation()"> 
-                                <img src="/static/images/forward.png" class="i" id="next_image" width="10%" alt="next" align="right">
-                            </a>
+                        <div class="form-group">
+                            <input type="image" class="i" width="10%" name="next" id="next" src="/static/images/forward.png" alt="next" align="right" onclick="validation()">
                         </div>
                     </form>
                 </div>
+            </div>
+            <div>
+               <!-- <p id="error" name="error"></p{{error}}>  -->
             </div>
         </div>
         <div class="col-sm-6">
@@ -59,39 +63,42 @@
 {% block js %}
 
 <script>
-    
     function validation()
     {
-        user = document.getElementById("username")
-        mail = document.getElementById("mail")
-        $(document).ready(function(){
-            $('#next').click(function(){
-                if ((user=="") && (mail==""))
-                {
-                    alert("Field is empty!")
-                    return false
-                }
-                else
-                {
-                    $(document).ready(function(){
-                        $('#username').bootstrapValidator({
-                            fields: {
-                                username: {
-                                    validators: {
-                                        regexp: {
-                                            regexp: /^[a-z\s]+$/i,
-                                            message: 'The full name can consist of alphabetical characters and spaces only'
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    return true
-                }
-            });
-        });   
+        err = document.getElementById("next").value
+        alert(err);
     }
+            //     var user = document.getElementById("username").value
+            //     var mail = document.getElementById("mail").value
+            //     var lnk = doucment.getElementById("next")
+            //     if ( (user === "")  || (mail === "") )
+            //     {
+                //         alert("Field is empty!");
+                //         if (window.addEventListener) 
+                //         {
+                    //             document.addEventListener('click', function (e) {
+                        //                 if (e.target.id === lnk.id)    
+                        //                 {
+                            //                     e.preventDefault();         // Comment this line to enable the link tag again.
+                            //                 }
+                            //             });
+                            //         }
+                            //     }
 
+$(document).ready(function(){
+    $('#username').bootstrapValidator({
+        fields: {
+            username: {
+                validators: {
+                    regexp: {
+                        regexp: /^[a-z\s]+$/i,
+                            message: 'The full name can consist of alphabetical characters and spaces only'
+                        }
+                    }
+                }
+            }
+        });
+    });
+                                                                
 </script>
 {% endblock %}

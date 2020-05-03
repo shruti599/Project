@@ -13,20 +13,43 @@ myserver=pymongo.MongoClient("mongodb://localhost:27017")
 
 mydb=myserver["Summarizer_Database"]
 
-Users_Detail=mydb["User_Datail"] #personal details of user
+Users_Detail=mydb["User_Datail"] #personal details of user 
 Users_Content=mydb["User_Content"] #content detail of users
 
 #function for entering record of user
 def insert_precord(username,email):
-    value = {"username":username , "email": email, "password":password}
-    x = Users_Detail.insert_one(value)
-    print("Record inserted successfully")
-    flash("Inserted recorded")
+    c=find_already(email)
+    if c != 0:
+        flash("email already exist.")
+        print("email exist.")
+        return "Email exist"
+    else:
+        value = {"username":username , "email": email, "password":password}
+        x = Users_Detail.insert_one(value)
+        print("Record inserted successfully")
+        flash("Inserted recorded")
+        return "Record inserted"
 
 def insert_srecord():
-    value = {"content":content}
+    value = {"matter":matter}
     y = Users_Content.insert_one(value)
     print("content saved")
+
+# function to check whether email already exists
+def find_already(mail):
+    query={"email": mail}
+    a=Users_Detail.find(query)
+    count=0
+    for i in a:
+        if i == mail:
+           count=count+1
+           break
+
+    if count == 0:
+        return 0
+    else:
+        return 1
+
 
 UPLOAD_FOLDER = 'static/uploaded_files'
 ALLOWED_EXTENSIONS = set(['txt','pdf'])
@@ -129,24 +152,20 @@ def reg_confirmation():
 def register():
     # Initialize the errors variable to empty string. We will have the error messages
     # in that variable, if any.
-    errors = ''
-    if request.method == "GET": # If the request is GET, render the form template.
-        return render_template("registration.html", errors=errors)
-    else: 
-        # The request is POST with some data, get POST data and validate it.
+    errors = ""
+    if request.method == "POST": 
         #  Stripping it to remove leading and trailing whitespaces
-        email = request.form['email'].strip()
+        email = request.form['mail'].strip()
         username = request.form['username'].strip()
         # Check if all the fields are non-empty and raise an error otherwise
-        if not email or not username:
-            errors = "Please enter all the fields."
         if not errors:
             # Validate the email address and raise an error if it is invalid
             if not is_email_address_valid(email):
                 errors = errors + "Please enter a valid email address"
-        #if not errors:
+        if not errors:
+            errors = insert_precord(username,email)
             #if email exits then send password to that mail & store it in db      
-    return render_template('registration.html',errors=errors)
+    return render_template('registration.html',errors = errors)
 
 @app.route('/login')
 def about():
