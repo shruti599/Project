@@ -1,54 +1,11 @@
 from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, session
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from summarize import summarize
-import pymongo
 import os
 import json
 from function import extract_text_from_pdf
 import re
-import smtplib 
-
-myserver=pymongo.MongoClient("mongodb://localhost:27017")
-
-mydb=myserver["Summarizer_Database"]
-
-Users_Detail=mydb["User_Datail"] #personal details of user 
-Users_Content=mydb["User_Content"] #content detail of users
-
-#function for entering record of user
-def insert_precord(username,email):
-    c=find_already(email)
-    if c != 0:
-        flash("email already exist.")
-        print("email exist.")
-        return "Email exist"
-    else:
-        value = {"username":username , "email": email, "password":password}
-        x = Users_Detail.insert_one(value)
-        print("Record inserted successfully")
-        flash("Inserted recorded")
-        return "Record inserted"
-
-def insert_srecord():
-    value = {"matter":matter}
-    y = Users_Content.insert_one(value)
-    print("content saved")
-
-# function to check whether email already exists
-def find_already(mail):
-    query={"email": mail}
-    a=Users_Detail.find(query)
-    count=0
-    for i in a:
-        if i == mail:
-           count=count+1
-           break
-
-    if count == 0:
-        return 0
-    else:
-        return 1
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
@@ -67,21 +24,14 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 #function for validing email
-def is_email_address_valid(email):
-    """Validate the email address using a regex."""
-    if not re.match("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", email):
-        return False
-    return True
+# def is_email_address_valid(email):
+#     """Validate the email address using a regex."""
+#     if not re.match("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", email):
+#         return False
+#     return True
 
 #function for sending mail
-def mail_for_password():
-    conn = smtplib.SMTP("smtp.gmail.com",587)
-    conn.starttls()
-    conn.login("mailid","password")
-    #1 jo send krta
-    #2 jisko krna hota
-    conn.sendmail("shrmsh.1999@gmail.com","upendrasingh11lko@gmail.com","Subject: practise\n\n Dear nalayak dost, stay safe\n\n")
-    return True
+
 
 contents=""
 @app.route('/main',methods=['GET','POST'])
@@ -106,7 +56,6 @@ def main():
     else:
         contents=""
     return render_template('main.html', content=contents)
-
 
 @app.route('/text_result' ,methods = ['GET', 'POST'])
 def text_result():
@@ -134,9 +83,11 @@ def userdash():
 def useraccount():
     return render_template('useraccount.html')
 
-
-@app.route('/pass')
+@app.route('/pass', methods=['GET' , 'POST'])
 def password():
+    if request.method == 'POST':
+        # print(request.form)
+        return redirect('/confirm')
     return render_template('pass1.html')
 
 @app.route('/adminlog')
@@ -147,25 +98,33 @@ def admin():
 def reg_confirmation():
     return render_template('confirm.html')
 
+@app.route('/confpass')
+def reg_confirm():
+    return render_template('confpass.html') 
 
 @app.route('/register',methods = ['GET', 'POST'])
 def register():
-    # Initialize the errors variable to empty string. We will have the error messages
-    # in that variable, if any.
-    errors = ""
+    # Initialize the errors variable to empty string. We will have the error message in that variable, if any.
     if request.method == "POST": 
-        #  Stripping it to remove leading and trailing whitespaces
+        # Stripping it to remove leading and trailing whitespaces
         email = request.form['mail'].strip()
         username = request.form['username'].strip()
         # Check if all the fields are non-empty and raise an error otherwise
-        if not errors:
-            # Validate the email address and raise an error if it is invalid
-            if not is_email_address_valid(email):
-                errors = errors + "Please enter a valid email address"
-        if not errors:
-            errors = insert_precord(username,email)
-            #if email exits then send password to that mail & store it in db      
-    return render_template('registration.html',errors = errors)
+        # if not errors:
+        # #if errors != "":
+        #     # Validate the email address and raise an error if it is invalid
+        #     if not is_email_address_valid(email):
+        #         errors = errors + "Please enter a valid email address"
+        errors =  insert_precord(username,email)
+        if errors != 0:
+            return redirect(url_for('password'))
+        else:
+            errors = "Email exist"
+            return render_template('registration.html',errors = errors)
+    else:
+        return render_template('registration.html')
+
+#if email exits then send password to that mail & store it in db  
 
 @app.route('/login')
 def about():
