@@ -62,7 +62,7 @@
 {% endblock %}
 {% block body %}
 
-<div class="container-fluid">
+<div class="container-fluid" id="cbox">
     <div class="row">
         <div  class="col-6 p-0 m-3">           
             
@@ -102,7 +102,7 @@
                     <li> Click on the next button to move on to next process.</li>
                 </ul>
             </div>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST">
                 <div class="form-group  margin-right">
                     <input type="image" src="/static/images/forward.png" class="i" width="10%" alt="next" align="right" id="submit" >     
                 </div>
@@ -137,41 +137,49 @@
             });
         });
         $('#submit').click('image', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            var cleanup = /\"|\'|\)/g;
+            var bg_img = $(".picgrid").css("background-image");
+            console.log(bg_img)
             if (sequence.length != 0){
-                console.log(sequnce)
-            $.ajax({
-                url : '/pass',
-                type : 'POST',
-                data:{'seq' : sequence},
-            success: function (response){
-                console.log(response);
-            },
-            error: function (error){
-                console.log(error);
-            },
-            
-            });
+                $.ajax({
+                    url : '/pass',
+                    type : 'POST',
+                    data:{
+                        'seq'   : JSON.stringify(sequence),
+                        'image' : bg_img.toString(),
+                    },
+                    success: function (response){
+                        console.log(response);
+                        $('#cbox').html(response)
+                    },
+                    error: function (error){
+                        console.log(error);
+                    },
+                    
+                });
             }
             else{
                 alert("no data in sequence")
             }
             // .done(function(data){
-            //     if (data.error) {
-            //         $('#errorAlert').text(data.error).show();
-            //         $('#successAlert').hide();
-            //     }
-            //     else{
-            //         $('#successAlert').text(data.name).show();
-            //         $('#errorAlert').hide();
-            //     }
-            // });
-            // event.preventDefault();
-        });
-    });
-    function change_src(path){
-        $(document).ready(function(){
-            $('.picgrid').css("background-image", "url(" + path + ")");
-        });
-    }
-</script>
-{% endblock %}
+                //     if (data.error) {
+                    //         $('#errorAlert').text(data.error).show();
+                    //         $('#successAlert').hide();
+                    //     }
+                    //     else{
+                        //         $('#successAlert').text(data.name).show();
+                        //         $('#errorAlert').hide();
+                        //     }
+                        // });
+                        // event.preventDefault();
+                    });
+                });
+                function change_src(path){
+                    $(document).ready(function(){
+                        $('.picgrid').css("background-image", "url(" + path + ")");
+                    });
+                }
+            </script>
+            {% endblock %}
