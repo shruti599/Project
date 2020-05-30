@@ -86,7 +86,11 @@ def useraccount():
 @app.route('/pass', methods=['GET' , 'POST'])
 def password():
     if request.method == 'POST':
-        # print(request.form)
+        seq = request.form.get('seq')
+        image = request.form.get('image')
+        image = image.replace('url("','').replace('")','')
+        # print(seq,image)
+        # save to database
         return redirect('/confirm')
     return render_template('pass1.html')
 
