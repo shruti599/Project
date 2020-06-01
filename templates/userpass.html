@@ -1,17 +1,17 @@
 {% extends 'layout.html' %}
 {% block css %}
 <style>
-.picgrid{
-    height: 520px !important;
-    width: 580px !important;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url('/static/images/pass_image_7');
-    background-color: black;
-    padding: 0;
-    background-position: center;
-}
- .picgrid .box{
+    .picgrid{
+        height: 520px !important;
+        width: 580px !important;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url('/static/images/pass_image_4.jpg');
+        background-color: black;
+        padding: 0;
+        background-position: center;
+    }
+    .picgrid .box{
         margin:0;
         display: inline-block;
         padding: 0;
@@ -35,28 +35,30 @@
         height: 80px;
         width: 100px;
         margin: 0px;
-        }
+    }
 </style>
 
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
+<div class="container-fluid" id="cbox">
     <div class="row">
-        <div class="col-6 p-0 m-3 center">           
-            <div class="picgrid"> 
+        <div class="col-6 p-0 m-3 center">
+            <div class="form-group" id="path"> {{img_path}}       
+            <div class="picgrid">     
                 {% for i in range(16) %}
                 {% for j in range(16) %}
                 <button class="box text-dark text-center">{{i+1}},{{j+1}}</button>
                 {% endfor %}
                 {% endfor %}
+                </div>
             </div>
         </div>
-        <div class"margin-right">
-            <a class="nav-link" href="main">
-                <img src="/static/images/forward.png" class="i" width="10%" alt="next" align="right">
-            </a>
-        </div>
+        <form method="POST">
+            <div class="form-group  margin-right">
+                <input type="image" src="/static/images/forward.png" class="i" width="10%" alt="next" align="right" id="submit" >     
+            </div>
+        </form>
     </div>
 </div>
 
@@ -64,15 +66,55 @@
 
 {% block js %}
 <script>
+    $(document).ready(function(){
+        var pth = document.getElementById('path').value
+        $('.picgrid').css("background-image", "url(" + pth + ")");
+        // })
+        //     $('.picgrid').css("background-image", "url(" + img_path + ")");
+    })
+    
     $(function () {
         let sequence = new Array()
         $('.box').each(function(index){
             $(this).click(function(){
-                $(this).css({'background-color':'olive'});
-                $(this).disabled()
-                sequence.push(index);
-                console.log(sequence)          
+                if ($(this).hasClass('chosen')){
+                    $(this).css({'background-color':'transparent'});
+                    $(this).removeClass('chosen');
+                    sequence.pop(index);
+                }else{
+                    $(this).css({'background-color':'olive'});
+                    $(this).addClass('chosen')
+                    sequence.push(index);
+                }
+                console.log(sequence)
             });
+        });
+        $('#submit').click('image', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            var cleanup = /\"|\'|\)/g;
+            // var bg_img = $(".picgrid").css("background-image"); //no need 
+            // console.log(bg_img)
+            if (sequence.length != 0){
+                $.ajax({
+                    url : '/userpass', // it will be /userpass
+                    type : 'POST',
+                    data:{
+                        'seq'   : JSON.stringify(sequence),
+                        // 'image' : bg_img.toString(), //no need for this
+                    },
+                    success: function (response){
+                        console.log(response);
+                        // $('#cbox').html(response)
+                    },
+                    error: function (error){
+                        console.log(error);
+                    },
+                });
+            }
+            else{
+                alert("You have not selected any point. Please select atleast one point.")
+            }
         });
     });
 </script>

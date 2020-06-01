@@ -27,3 +27,9 @@ def extract_text_from_pdf(pdf_path):
         return ""
       
 # print(extract_text_from_pdf('static\\uploaded_files\\COTII-2020_REGISTRATION.pdf'))
+
+def get_image_name(img):
+    image = img.replace('url("','').replace('")','').strip()
+    image = image[37:49]
+    image = image.strip()
+    return image

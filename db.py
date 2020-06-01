@@ -66,20 +66,28 @@ def duplicate_mail(mail):
 
 
 #funtion to insert password for the given email
-def insert_password(mail, pas):
+def insert_password(mail, sequence, img):
+    # mail=input("enter mail: ")
     a = duplicate_mail(mail)
+    q = {'email':mail}
     if a != 0:
-        b = Users_Detail.update_one()
+        value={'password': sequence , 'image_name': img}
+        b = Users_Detail.update_many(q,{"$set":value, "$currentDate":{"lastModified":True}})
+        print("password set")
+        return 'True'
+    else:
+        print("Email not found")
+        return 'False'
     return 0
 
 
-def mail_for_password():
+def mail_for_password(mail, main):
     conn = smtplib.SMTP("smtp.gmail.com",587)
     conn.starttls()
-    conn.login("mailid","password")
+    conn.login("summarywebapplication@gmail.com","summary@123")
     #1 jo send krta
     #2 jisko krna hota
-    conn.sendmail("shrmsh.1999@gmail.com","upendrasingh11lko@gmail.com","Subject: practise\n\n Dear nalayak dost, stay safe\n\n")
+    conn.sendmail("summarywebapplication@gmail.com", mail, "Subject: practise\n\n Dear nalayak dost, stay safe\n\n")
     return True
 
 

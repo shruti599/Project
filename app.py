@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from summarize import summarize
 import os
 import json
-from function import extract_text_from_pdf
+from function import extract_text_from_pdf, get_image_name
 import re
 from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password
 
@@ -73,7 +73,8 @@ def text_result():
 
 @app.route('/userpass')
 def userpassword():
-    return render_template('userpass.html')
+    img_path = "/static/images/pass_image_7.jpg"
+    return render_template('userpass.html', img_path = img_path)
 
 @app.route('/userdash')
 def userdash():
@@ -85,9 +86,16 @@ def useraccount():
 
 @app.route('/pass', methods=['GET' , 'POST'])
 def password():
+    mail = session.get('email_value','None')
+    print(mail)
     if request.method == 'POST':
-        # print(request.form)
-        return redirect('/confirm')
+        seq = request.form.get('seq')
+        image = request.form.get('image')
+        image = get_image_name(image)
+        print(mail, seq, image)
+        val = insert_password(mail, seq, image)
+        if val == "True":
+            return redirect('/confirm')
     return render_template('pass1.html')
 
 @app.route('/adminlog')
@@ -96,11 +104,12 @@ def admin():
 
 @app.route('/confirm')
 def reg_confirmation():
+    # mail_for_password(mail, main)
     return render_template('confirm.html')
 
 @app.route('/confpass')
 def reg_confirm():
-    return render_template('confpass.html') 
+    return render_template('confpass.html')
 
 @app.route('/register',methods = ['GET', 'POST'])
 def register():
@@ -117,6 +126,8 @@ def register():
         #         errors = errors + "Please enter a valid email address"
         errors =  insert_precord(username,email)
         if errors != 0:
+            #encrypt the mail
+            session['email_value'] = email
             return redirect(url_for('password'))
         else:
             errors = "Email exist"
@@ -132,7 +143,7 @@ def about():
 
 @app.route('/')
 def home():
-    return render_template('layout.html') 
+    return render_template('home.html') 
     
 if __name__ == "__main__":
     app.run(debug=True)

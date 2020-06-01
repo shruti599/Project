@@ -28,6 +28,7 @@
             <div class="card" style="background-color: rgb(247, 248, 247);">
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" > 
+                        New to page! Signup below 
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
@@ -41,6 +42,7 @@
                             {% endif %}
                         </div>
                         <div class="form-group">
+                            Already have an account?<a href="/login">Sign-In</a>
                             <input type="image" class="i" width="10%" name="next" id="next" src="/static/images/forward.png" alt="next" align="right">
                         </div>
                     </form>
