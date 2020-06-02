@@ -30,6 +30,10 @@ def extract_text_from_pdf(pdf_path):
 
 def get_image_name(img):
     image = img.replace('url("','').replace('")','').strip()
-    image = image[37:49]
+    image = image[36:48]
     image = image.strip()
     return image
+
+def get_image_path(img):
+    path = "/static/images/"+img+".jpg"
+    return path

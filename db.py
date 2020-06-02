@@ -28,11 +28,11 @@ def display():
 
 # print(mydb.list_collection_names())
 # print(myserver.list_database_names())
-#function for entering record of user
+# function for entering record of user
 def insert_precord(username,email):
     c = duplicate_mail(email)
     print(f'duplicate email {c}')
-    if c != 0: 
+    if c != None: 
         flash("email already exist.")
         print("email exist.")
         return 0
@@ -52,36 +52,26 @@ def insert_srecord():
 # function to check whether email already exists
 def duplicate_mail(mail):
     query = {"email": mail}
-    flag=0
-    a = Users_Detail.find(query)
-    for i in a:
-        if i['email'] == mail:
-            flag = flag + 1
-            print(i)
-            break
-    if flag != 0:
-        return 1
-    else:
-        return 0
-
+    a = Users_Detail.find_one(query)
+    return a
 
 #funtion to insert password for the given email
 def insert_password(mail, sequence, img):
-    # mail=input("enter mail: ")
-    a = duplicate_mail(mail)
-    q = {'email':mail}
-    if a != 0:
-        value={'password': sequence , 'image_name': img}
-        b = Users_Detail.update_many(q,{"$set":value, "$currentDate":{"lastModified":True}})
-        print("password set")
-        return 'True'
-    else:
-        print("Email not found")
-        return 'False'
+    if img and mail and sequence:
+        a = duplicate_mail(mail)
+        q = {'email':mail}
+        if a != None:
+            value={'password': sequence , 'image_name': img}
+            b = Users_Detail.update_many(q,{"$set":value, "$currentDate":{"lastModified":True}})
+            print("password set")
+            return 'True'
+        else:
+            print("Email not found")
+            return 'False'
     return 0
 
 
-def mail_for_password(mail, main):
+def mail_for_password(mail):
     conn = smtplib.SMTP("smtp.gmail.com",587)
     conn.starttls()
     conn.login("summarywebapplication@gmail.com","summary@123")

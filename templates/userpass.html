@@ -45,17 +45,18 @@
     <div class="row">
         <div class="col-6 p-0 m-3 center">
             <div class="form-group" id="path"> {{img_path}}       
-            <div class="picgrid">     
-                {% for i in range(16) %}
-                {% for j in range(16) %}
-                <button class="box text-dark text-center">{{i+1}},{{j+1}}</button>
-                {% endfor %}
-                {% endfor %}
+                <div class="picgrid">     
+                    {% for i in range(16) %}
+                    {% for j in range(16) %}
+                    <button class="box text-dark text-center">{{i+1}},{{j+1}}</button>
+                    {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
         <form method="POST">
             <div class="form-group  margin-right">
+                <button id="change">change</button>
                 <input type="image" src="/static/images/forward.png" class="i" width="10%" alt="next" align="right" id="submit" >     
             </div>
         </form>
@@ -67,12 +68,13 @@
 {% block js %}
 <script>
     $(document).ready(function(){
-        var pth = document.getElementById('path').value
-        $('.picgrid').css("background-image", "url(" + pth + ")");
-        // })
-        //     $('.picgrid').css("background-image", "url(" + img_path + ")");
-    })
-    
+        var pth = document.getElementById('path')
+        $("button").click(function() { 
+            $('.picgrid').css("background-image", "url(" + pth + ")");
+            // })
+            //     $('.picgrid').css("background-image", "url(" + img_path + ")");
+        });
+    });
     $(function () {
         let sequence = new Array()
         $('.box').each(function(index){

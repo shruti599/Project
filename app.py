@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from summarize import summarize
 import os
 import json
-from function import extract_text_from_pdf, get_image_name
+from function import extract_text_from_pdf, get_image_name, get_image_path
 import re
 from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password
 
@@ -71,10 +71,15 @@ def text_result():
     # else:
     #     return render_template('sum_result.html')
 
-@app.route('/userpass')
+@app.route('/userpass', methods=['GET','POST'])
 def userpassword():
-    img_path = "/static/images/pass_image_7.jpg"
-    return render_template('userpass.html', img_path = img_path)
+    img = session.get('image','None')
+    m = session.get('registered_mail', 'None')
+    path_of_image = get_image_path(img)
+    print(path_of_image)
+    # if request.method == 'POST':
+    
+    return render_template('userpass.html', img_path = path_of_image)
 
 @app.route('/userdash')
 def userdash():
@@ -91,11 +96,14 @@ def password():
     if request.method == 'POST':
         seq = request.form.get('seq')
         image = request.form.get('image')
-        image = get_image_name(image)
-        print(mail, seq, image)
-        val = insert_password(mail, seq, image)
-        if val == "True":
-            return redirect('/confirm')
+        if image and seq and mail:
+            image = get_image_name(image)
+            print(mail, seq, image)
+            val = insert_password(mail, seq, image)
+            if val == "True":
+                return redirect('/confirm')
+        else :
+            print("no data")
     return render_template('pass1.html')
 
 @app.route('/adminlog')
@@ -137,8 +145,20 @@ def register():
 
 #if email exits then send password to that mail & store it in db  
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def about():
+    re = {}
+    if request.method == 'POST':
+        m = request.form['mail'].strip()
+        re['user_record'] = duplicate_mail(m)
+        print(re)
+        if re != {}:
+            n = re['user_record']['image_name']
+            print(n)
+            session['image'] = n
+            session['registered_mail'] = m
+            return redirect(url_for('userpassword'))
+        # check that mail exist in db
     return render_template('login.html')
 
 @app.route('/')
