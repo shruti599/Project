@@ -2,7 +2,10 @@ from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 import pymongo
 import smtplib 
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import socket
+# from email.message import EmailMessage
 
 myserver = pymongo.MongoClient("mongodb://localhost:27017")
 socket.getaddrinfo('localhost',8080)
@@ -70,19 +73,41 @@ def insert_password(mail, sequence, img):
             return 'False'
     return 0
 
+#function for checking password
+# def password_checker(mail, pass_seq, enter_pass):
+#     a = duplicate_mail(mail)
+#     if a != None:
+
 
 def mail_for_password(mail):
+    email = 'summarywebapplication@gmail.com'
+    password = 'summary@123'
+    send_to_email = "shrmsh.1999@gmail.com"
+    sub = 'Verficication Mail'
+    link = "http://127.0.0.1:5000/main"
+    msg = '<p> Please click on the link to summarize your data. </p>' + link
+
+    m = MIMEMultipart('alertnative')
+    m['From'] = email
+    m['To'] = send_to_email
+    m['Subject'] = sub
+
+    m.attach(MIMEText(msg,'html'))
+
     conn = smtplib.SMTP("smtp.gmail.com",587)
     conn.starttls()
-    conn.login("summarywebapplication@gmail.com","summary@123")
+    conn.login(email,password)
+    text = m.as_string()
+
     #1 jo send krta
     #2 jisko krna hota
-    conn.sendmail("summarywebapplication@gmail.com", mail, "Subject: practise\n\n Dear nalayak dost, stay safe\n\n")
+    conn.sendmail(email, send_to_email, text)
+    conn.quit()
     return True
 
 
+def delete():
+    query = {"email":'shrmsh.1999@gmail.com'}
+    a = Users_Detail.find_one_and_delete(query)
+    
 
-# def delete():
-#     query = {"email":'abc.209@gmail.com'}
-#     a = Users_Detail.find_one_and_delete(query)
-#     print(a.deleted_count)

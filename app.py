@@ -9,7 +9,7 @@ from db import insert_precord, insert_srecord, duplicate_mail, insert_password, 
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
-ALLOWED_EXTENSIONS = set(['txt','pdf'])
+ALLOWED_EXTENSIONS = set(['txt','pdf','doc','docx'])
 
 app=Flask(__name__)
 app.secret_key="hello"
@@ -44,6 +44,10 @@ def main():
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
+        print("file wala")
+        print(file)
+        f = allowed_file(file)
+        print(f)
         if file.filename == '':
             flash('No selected file')
             #print("No file selected")
@@ -52,7 +56,10 @@ def main():
             filename = secure_filename(file.filename)
             print(os.path.exists(app.config['UPLOAD_FOLDER']))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print(filename)
             contents=extract_text_from_pdf('static\\uploaded_files\\'+filename)
+            # else:
+            #     print("txt file")
     else:
         contents=""
     return render_template('main.html', content=contents)
@@ -77,8 +84,12 @@ def userpassword():
     m = session.get('registered_mail', 'None')
     path_of_image = get_image_path(img)
     print(path_of_image)
-    # if request.method == 'POST':
-    
+    if request.method == 'POST':
+        q = duplicate_mail(m)
+        print(q['password'])
+        se = request.form.get('seq')
+        password_checker(m, q['password'], se)
+        return redirect(url_for('main'))
     return render_template('userpass.html', img_path = path_of_image)
 
 @app.route('/userdash')
@@ -101,7 +112,7 @@ def password():
             print(mail, seq, image)
             val = insert_password(mail, seq, image)
             if val == "True":
-                return redirect('/confirm')
+                return redirect(url_for('reg_confirmation'))
         else :
             print("no data")
     return render_template('pass1.html')
@@ -112,7 +123,9 @@ def admin():
 
 @app.route('/confirm')
 def reg_confirmation():
-    # mail_for_password(mail, main)
+    mail = session.get("email_value", 'None')
+    if mail != 'None':
+        mail_for_password(mail)
     return render_template('confirm.html')
 
 @app.route('/confpass')
@@ -146,15 +159,15 @@ def register():
 #if email exits then send password to that mail & store it in db  
 
 @app.route('/login', methods=['GET', 'POST'])
-def about():
+def login():
     re = {}
     if request.method == 'POST':
         m = request.form['mail'].strip()
         re['user_record'] = duplicate_mail(m)
-        print(re)
+        # print(re)
         if re != {}:
             n = re['user_record']['image_name']
-            print(n)
+            # print(n)
             session['image'] = n
             session['registered_mail'] = m
             return redirect(url_for('userpassword'))
