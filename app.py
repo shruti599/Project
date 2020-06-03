@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from summarize import summarize
 import os
 import json
-from function import extract_text_from_pdf, get_image_name, get_image_path
+from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
 import re
 from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password
 
@@ -23,15 +23,6 @@ def allowed_file(filename):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
-#function for validing email
-# def is_email_address_valid(email):
-#     """Validate the email address using a regex."""
-#     if not re.match("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", email):
-#         return False
-#     return True
-
-#function for sending mail
-
 
 contents=""
 @app.route('/main',methods=['GET','POST'])
@@ -44,10 +35,6 @@ def main():
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
-        print("file wala")
-        print(file)
-        f = allowed_file(file)
-        print(f)
         if file.filename == '':
             flash('No selected file')
             #print("No file selected")
@@ -57,9 +44,12 @@ def main():
             print(os.path.exists(app.config['UPLOAD_FOLDER']))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(filename)
-            contents=extract_text_from_pdf('static\\uploaded_files\\'+filename)
-            # else:
-            #     print("txt file")
+            ext = filename.rsplit('.',1)[1]
+            print("ext"+ext)
+            if ext == 'pdf':
+                contents=extract_text_from_pdf('static\\uploaded_files\\' + filename)
+            else:
+                contents=extract_text('static\\uploaded_files\\' + filename)
     else:
         contents=""
     return render_template('main.html', content=contents)

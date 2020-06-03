@@ -4,9 +4,10 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-
+import docx2txt
 
 def extract_text_from_pdf(pdf_path):
+    # path = 'static/uploaded_files/Stress_Management.pdf'
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
     converter = TextConverter(resource_manager, fake_file_handle)
@@ -26,7 +27,13 @@ def extract_text_from_pdf(pdf_path):
     else:
         return ""
       
-# print(extract_text_from_pdf('static\\uploaded_files\\COTII-2020_REGISTRATION.pdf'))
+# print(extract_text_from_pdf('static\\uploaded_files\\Stress_Management.pdf'))
+
+def extract_text(text_path):
+    text = docx2txt.process(text_path)
+    return text
+
+# print(extract_text('static\\uploaded_files\\The_12_Principles_of_Animation.docx'))
 
 def get_image_name(img):
     image = img.replace('url("','').replace('")','').strip()
