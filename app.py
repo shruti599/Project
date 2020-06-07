@@ -5,7 +5,7 @@ import os
 import json
 from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
 import re
-from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password, password_checker
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
@@ -48,39 +48,70 @@ def main():
             print("ext"+ext)
             if ext == 'pdf':
                 contents=extract_text_from_pdf('static\\uploaded_files\\' + filename)
+                session['data'] = contents
+                return render_template('main.html', content=contents)
             else:
                 contents=extract_text('static\\uploaded_files\\' + filename)
+                session['data'] = contents
+                return render_template('main.html', content = contents)
+        l = (request.form.get('lns'))
+        t = (request.form.get('txt'))
+        #get the numer f lines and data form
+        if not (l and t) == "":
+            session['lines'] = l
+            session['text'] = t
+            print("l")
+            print(l)
+            pritn(t)
+            return redirect(url_for('text_result'))
     else:
         contents=""
-    return render_template('main.html', content=contents)
+        return render_template('main.html', content=contents)
 
 @app.route('/text_result' ,methods = ['GET', 'POST'])
 def text_result():
-    if request.method == 'POST':
-        lines=(request.form.get("lines"))
-        data=request.form.get("text")
-        if not data == "":
+    result = ""
+    if request.method == 'GET':
+        data = session.get('data','None')
+        lines = session.get('lines','None')
+        print(lines)
+        if not data == 'None':
             results = json.loads(summarize(data,lines))
             session['summary']=results
+            print(result)
+            return render_template('sum_result.html', results=results)
         else:
             results = None
-        return render_template('sum_result.html',results=results)
-    # else:
-    #     return render_template('sum_result.html')
+            return redirect(url_for('main'))
+    else:
+        print(result)
+        return redirect(url_for('main'))
+
+# @app.route('/display_error')
+# def some_error():
+#     if session.get('summary') == "":
+#         return render_template('some_error.html')
 
 @app.route('/userpass', methods=['GET','POST'])
 def userpassword():
+    reg_pass = []
     img = session.get('image','None')
-    m = session.get('registered_mail', 'None')
-    path_of_image = get_image_path(img)
-    print(path_of_image)
-    if request.method == 'POST':
-        q = duplicate_mail(m)
-        print(q['password'])
+    if img != 'None':
+        path_of_image = get_image_path(img)
+    if request.method == 'GET':
+        print(path_of_image)
+        return render_template('userpass.html', img_path = path_of_image)
+    else:
+        m = session.get('registered_mail', 'None')
         se = request.form.get('seq')
-        password_checker(m, q['password'], se)
-        return redirect(url_for('main'))
-    return render_template('userpass.html', img_path = path_of_image)
+        r = password_checker(m, se)
+        print(r)
+        if r == 1:
+            return redirect(url_for('confirm'))
+        else:
+            err = "Wrong Password"
+            return render_template('userpass.html', img_path = path_of_image, error = err)
+    
 
 @app.route('/userdash')
 def userdash():
@@ -164,9 +195,17 @@ def login():
         # check that mail exist in db
     return render_template('login.html')
 
+# @app.route('/')
+# def home():
+#     return render_template('home.html') 
+
 @app.route('/')
-def home():
-    return render_template('home.html') 
+def site():
+    return render_template('index.html')
+
+@app.route('/some_error')
+def some_error():
+    return render_template('some_error.html')
     
 if __name__ == "__main__":
     app.run(debug=True)

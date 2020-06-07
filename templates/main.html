@@ -28,7 +28,7 @@
         </div>
         <div class="col-sm-7">
             <form method="POST" enctype="multipart/form-data" action="text_result">          
-                <textarea cols="90" rows="15" name="text">{{content}}</textarea>
+                <textarea cols="90" rows="15" name="text" id="text">{{content}}</textarea>
                 <div clss="row">
                     <div class="offset-5 col-sm-6">
                         <select id="lines" name="lines">
@@ -48,5 +48,33 @@
 </div>
 {% endblock %}
 {% block js %}
-
+<script>
+    $(function (){
+        $('#submit').click( function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            var text = $('#text').text()
+            var lines = $('#lines').text()
+            if (text != ""){
+                $$.ajax({
+                    type: "POST",
+                    url: "/main",
+                    data: {
+                        txt = text.toString(),
+                        lns = lines.toString(),
+                    },
+                    success: function (response) {
+                        console.log(response)
+                    },
+                    error: function (response){
+                        console.log(response)
+                    }
+                });
+            }
+            else{
+                alert("Nothing to summarize")
+            }
+        })
+    })
+</script>
 {% endblock %}

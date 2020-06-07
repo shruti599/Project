@@ -5,6 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import socket
+import ast
 # from email.message import EmailMessage
 
 myserver = pymongo.MongoClient("mongodb://localhost:27017")
@@ -35,7 +36,7 @@ def display():
 def insert_precord(username,email):
     c = duplicate_mail(email)
     print(f'duplicate email {c}')
-    if c != None: 
+    if c != None:
         flash("email already exist.")
         print("email exist.")
         return 0
@@ -74,9 +75,20 @@ def insert_password(mail, sequence, img):
     return 0
 
 #function for checking password
-# def password_checker(mail, pass_seq, enter_pass):
-#     a = duplicate_mail(mail)
-#     if a != None:
+def password_checker(mail, enter_pass):
+    a = duplicate_mail(mail)
+    if a != None:
+        reg_pass = ast.literal_eval(a['password'])
+        ep = ast.literal_eval(enter_pass)
+        # print(type(reg_pass))
+        reg_pass.sort()
+        ep.sort()
+        print(reg_pass)
+        print(ep)
+        if reg_pass == ep:
+            return 1
+        else:
+            return 0
 
 
 def mail_for_password(mail):
@@ -92,11 +104,11 @@ def mail_for_password(mail):
     m['To'] = send_to_email
     m['Subject'] = sub
 
-    m.attach(MIMEText(msg,'html'))
+    m.attach(MIMEText(msg, 'html'))
 
-    conn = smtplib.SMTP("smtp.gmail.com",587)
+    conn = smtplib.SMTP("smtp.gmail.com", 587)
     conn.starttls()
-    conn.login(email,password)
+    conn.login(email, password)
     text = m.as_string()
 
     #1 jo send krta
@@ -109,5 +121,6 @@ def mail_for_password(mail):
 def delete():
     query = {"email":'shrmsh.1999@gmail.com'}
     a = Users_Detail.find_one_and_delete(query)
-    
 
+
+# password_checker('shrmsh.1999@gmail.com',[238 ,255])

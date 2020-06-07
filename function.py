@@ -8,26 +8,30 @@ import docx2txt
 
 def extract_text_from_pdf(pdf_path):
     # path = 'static/uploaded_files/Stress_Management.pdf'
-    resource_manager = PDFResourceManager()
-    fake_file_handle = io.StringIO()
-    converter = TextConverter(resource_manager, fake_file_handle)
-    page_interpreter = PDFPageInterpreter(resource_manager, converter)
-    
-    with open(pdf_path, 'rb') as fh:
-        for page in PDFPage.get_pages(fh, caching=True, check_extractable=True):
-            page_interpreter.process_page(page)
-        text = fake_file_handle.getvalue()
-    
-    # close open handles
-    converter.close()
-    fake_file_handle.close()
-    
-    if text:
-        return text
-    else:
-        return ""
+    try:
+        resource_manager = PDFResourceManager()
+        fake_file_handle = io.StringIO()
+        converter = TextConverter(resource_manager, fake_file_handle)
+        page_interpreter = PDFPageInterpreter(resource_manager, converter)
+        
+        with open(pdf_path, 'rb') as fh:
+            for page in PDFPage.get_pages(fh, caching=True, check_extractable=True):
+                page_interpreter.process_page(page)
+            text = fake_file_handle.getvalue()
+        
+        # close open handles
+        converter.close()
+        fake_file_handle.close()
+        
+        if text:
+            return text
+        else:
+            return ""
+    except:
+        return None
+
       
-# print(extract_text_from_pdf('static\\uploaded_files\\Stress_Management.pdf'))
+# print(extract_text_from_pdf('static\\uploaded_files\\Unit_2.pdf'))
 
 def extract_text(text_path):
     text = docx2txt.process(text_path)
