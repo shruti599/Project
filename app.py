@@ -25,7 +25,7 @@ def uploaded_file(filename):
 
 
 contents=""
-@app.route('/main',methods=['GET','POST'])
+@app.route('/main', methods=['GET','POST'])
 def main():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -76,12 +76,15 @@ def text_result():
         lines = session.get('lines','None')
         print(lines)
         if not data == 'None':
-            results = json.loads(summarize(data,lines))
-            session['summary']=results
+            print(data)
+            result = json.loads(summarize(data,lines))
             print(result)
-            return render_template('sum_result.html', results=results)
+            if result !=  "":
+                session['summary']=result
+                return render_template('sum_result.html', results=result)
         else:
-            results = None
+            print(result)
+            result = None
             return redirect(url_for('main'))
     else:
         print(result)
@@ -107,7 +110,7 @@ def userpassword():
         r = password_checker(m, se)
         print(r)
         if r == 1:
-            return redirect(url_for('confirm'))
+            return redirect(url_for('main'))
         else:
             err = "Wrong Password"
             return render_template('userpass.html', img_path = path_of_image, error = err)
@@ -138,8 +141,10 @@ def password():
             print("no data")
     return render_template('pass1.html')
 
-@app.route('/adminlog')
+@app.route('/adminlog', methods=['POST', 'GET'])
 def admin():
+    if request.method == "POST":
+        return redirect(url_for('userdash'))
     return render_template('adminlog.html')
 
 @app.route('/confirm')

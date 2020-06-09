@@ -23,7 +23,7 @@
             </div>
             <div class="card" style="background-color: rgb(247, 248, 247);">
                 <div class="card-body">
-                    <form>
+                    <form method="POST"> 
                         <div class="form-group">
                             <label for="exampleInputUsername">Username</label>
                             <input type="text" name="username" class="form-control" id="exampleInputUsername" placeholder="Username" required="required" onchange="valid()">
@@ -34,12 +34,16 @@
                             <input type="password" name="password" class="form-control" id="exampleInputPassword" aria-describedby="emailHelp" placeholder="Enter password" required>
                             
                         </div>
-            
-                        <div class="align-right ml-auto">
+                        
+                            <div class="form-group  margin-right">
+                                <input type="image" src="/static/images/forward.png" class="i" width="10%" alt="next" align="right" id="submit" >     
+                            </div>
+                        
+                        <!-- <div class="align-right ml-auto">
                            <a role="button" href="pass1"> 
                                 <img src="/static/images/forward.png" class="i" id="next" width="10%" alt="next" align="right" onclick="validation()">
                             </a>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </div>
