@@ -5,7 +5,7 @@ import os
 import json
 from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
 import re
-from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password, password_checker
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_password, password_checker, passowrd_set_or_not
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
@@ -27,7 +27,24 @@ def uploaded_file(filename):
 contents=""
 @app.route('/main', methods=['GET','POST'])
 def main():
+    
     if request.method == 'POST':
+        data = request.form.get('txt')
+        lines = (request.form.get('lns'))
+        print("lines")
+        print(lines)
+        print("text")
+        print(data)
+        #get the numer f lines and data form
+        if data != None:
+            if lines == None:
+                lines = str(10)
+            session['lines'] = lines
+            session['text'] = data
+            print("l")
+            print(lines)
+            print(data)
+            return redirect(url_for('text_result'))
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -45,38 +62,33 @@ def main():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(filename)
             ext = filename.rsplit('.',1)[1]
-            print("ext"+ext)
+            # print("ext"+ext)
             if ext == 'pdf':
                 contents=extract_text_from_pdf('static\\uploaded_files\\' + filename)
-                session['data'] = contents
-                return render_template('main.html', content=contents)
-            else:
-                contents=extract_text('static\\uploaded_files\\' + filename)
+                print(contents)
                 session['data'] = contents
                 return render_template('main.html', content = contents)
-        l = (request.form.get('lns'))
-        t = (request.form.get('txt'))
-        #get the numer f lines and data form
-        if not (l and t) == "":
-            session['lines'] = l
-            session['text'] = t
-            print("l")
-            print(l)
-            pritn(t)
-            return redirect(url_for('text_result'))
+            else:
+                contents=extract_text('static\\uploaded_files\\' + filename)
+                print(contents)
+                session['data'] = contents
+                return render_template('main.html', content = contents)
+        
     else:
         contents=""
+        print("get")
         return render_template('main.html', content=contents)
 
 @app.route('/text_result' ,methods = ['GET', 'POST'])
 def text_result():
     result = ""
     if request.method == 'GET':
-        data = session.get('data','None')
-        lines = session.get('lines','None')
+        data = session.get('data', None)
+        lines = session.get('lines',None)
         print(lines)
-        if not data == 'None':
-            print(data)
+        if not (data and lines) == None:
+            # lines = int(lines)
+            # print(data)
             result = json.loads(summarize(data,lines))
             print(result)
             if result !=  "":
@@ -168,9 +180,6 @@ def register():
         # Check if all the fields are non-empty and raise an error otherwise
         # if not errors:
         # #if errors != "":
-        #     # Validate the email address and raise an error if it is invalid
-        #     if not is_email_address_valid(email):
-        #         errors = errors + "Please enter a valid email address"
         errors =  insert_precord(username,email)
         if errors != 0:
             #encrypt the mail
@@ -190,13 +199,19 @@ def login():
     if request.method == 'POST':
         m = request.form['mail'].strip()
         re['user_record'] = duplicate_mail(m)
-        # print(re)
+        print(re)
         if re != {}:
-            n = re['user_record']['image_name']
-            # print(n)
-            session['image'] = n
-            session['registered_mail'] = m
-            return redirect(url_for('userpassword'))
+            val = re['user_record']
+            v = passowrd_set_or_not(val)
+            if v != 0:
+            # if re['user_record']['image_name'] 
+                n = re['user_record']['image_name']
+            # # print(n)
+                session['image'] = n
+                session['registered_mail'] = m
+                return redirect(url_for('userpassword'))
+            else:
+                return render_template('login.html', error ="Your password is not set. Please click on forget password to set your password.")
         # check that mail exist in db
     return render_template('login.html')
 
@@ -211,6 +226,10 @@ def site():
 @app.route('/some_error')
 def some_error():
     return render_template('some_error.html')
+
+@app.route('/demo')
+def demo():
+    return render_template('checking.html')
     
 if __name__ == "__main__":
     app.run(debug=True)

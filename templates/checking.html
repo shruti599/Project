@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!-- Alert -->
+<div class="alert" role="alert" id="buttonAlert">
+  <strong>Success!</strong> You just showed an alert.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+
+<!-- Submit Button -->
+<div class="form-group">
+  <a href="#" data-toggle="modal" data-target="#ModalCenter" id="modalButton">Click me</a>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(document).ready(function() {
+  $("#buttonAlert").hide()
+  $("#modalButton").click(function() {
+    $("#buttonAlert").show()
+  })
+})
+</script>
+{% endblock %}

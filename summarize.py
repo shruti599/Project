@@ -5,6 +5,7 @@ def summarize(querydata,lines, key = 'ad26a38d88e40eff5160affcd452b5ca'):
     params = {'key':key, 'txt':querydata,'sentences':str(lines)}
     results = requests.get(url,params=params)
     if results.status_code==200:
+        print(results.text)
         return results.text
     else:
         return ""
@@ -50,6 +51,6 @@ model sentence structures, to generate Lorem Ipsum which looks reasonable. The g
 always free from repetition, injected humour, or non-characteristic words etc.
 
 """
-
-# lines = 10
-# summarize(data,lines)
+# def call_fun():
+#     lines = 10
+#     su = summarize(data,lines)

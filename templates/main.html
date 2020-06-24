@@ -1,16 +1,65 @@
 {% extends 'layout.html' %}
+
 {% block css %}
 <style>
+ 
+textarea{
+  padding:10px;
+  margin: 0 auto 10px; 
+  border:none ;font-size:20px;
+  font-family:'Montserrat Alternates';
+  border-radius:10px;outline:none;
+  transition: box-shadow .3s ease
+}
+
+textarea:-ms-input-placeholder {color:deepskyblue}
+textarea::-moz-placeholder {color:deepskyblue}
+textarea::-webkit-input-placeholder {color:deepskyblue}
+textarea:focus,
+textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
     .padding{
         padding: 1px;
         margin-top: 8px;
     }
+    .shifting{
+        margin-left: 83px;
+    }
+    html,body{
+        background-image: url('static/images/back4.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 90%;
+        font-family: 'Numans', sans-serif;
+    }
+    
 </style>
 {% endblock %}
 {% block body %}
 <div class="container-fluid">
+
     <div class="row mt-5">
-        <div class="offset-1 col-sm-3">
+        <div class="offset-2 col-sm-6">
+            <form method="POST" enctype="multipart/form-data" action="text_result"> 
+                <form>
+                    <textarea id="text" name="text" placeholder="Type Here"  rows="10" cols="40">{{content}} </textarea>
+                   <div class="message"></div>
+                 </form>
+                <div clss="row">
+                    <div class="offset-5 col-sm-6">
+                        <select id="lines" name="lines" class="btn btn-info">
+                            {% for i in range(10,100,3)%}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit" id="submit" class="btn btn-info">
+                        <input type="submit" value="Reset" id="reset" class="btn btn-info">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-3 shifting">
             <div class="card-header bg-transparent text-center">
                 <h5>Options</h5>
             </div>
@@ -26,24 +75,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-7">
-            <form method="POST" enctype="multipart/form-data" action="text_result">          
-                <textarea cols="90" rows="15" name="text" id="text">{{content}}</textarea>
-                <div clss="row">
-                    <div class="offset-5 col-sm-6">
-                        <select id="lines" name="lines">
-                            {% for i in range(10,100,3)%}
-                            <option value="{{i}}">{{i}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="offset-6 col-sm-7">
-                        <input type="submit" value="Submit" id="submit">
-                        <input type="submit" value="Reset" id="reset">
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>  
 </div>
 {% endblock %}
@@ -53,8 +84,8 @@
         $('#submit').click( function(event){
             event.preventDefault();
             event.stopPropagation();
-            var text = $('#text').text()
-            var lines = $('#lines').text()
+            var text = $('#text').text();
+            var lines = $('#lines').text();
             if (text != ""){
                 $$.ajax({
                     type: "POST",
@@ -72,9 +103,31 @@
                 });
             }
             else{
-                alert("Nothing to summarize")
+                alert("Nothing to summarize");
             }
         })
     })
+
+    $(function () {
+    "use strict";
+    
+    var maxText = $("textarea").attr("maxlength"),
+        
+        ourMessage = $(".message");
+    
+    ourMessage.html('<span>' + maxText + '</span> Characters Remaining');
+    
+    $("textarea").keyup(function () {
+       
+        var textLength = $(this).val().length,
+            
+            remText = maxText - textLength;
+        
+        ourMessage.html('<span>' + remText + '</span> Characters Remaining');
+        
+    });
+
+
+});
 </script>
 {% endblock %}
