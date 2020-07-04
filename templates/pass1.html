@@ -88,9 +88,9 @@
                         <div data-target="#carousel" data-slide-to="8" class="thumb"><a><img src="/static/images/pass_image_8.jpg" class="resolution" onclick="change_src(this.src)"></a></div>
                     </div>
                 </div>
-                <!-- /carousel-inner --> 
-                <a class="left carousel-control" href="#thumbcarousel" role="button" data-slide="prev"> <i class="fa fa-angle-left" aria-hidden="true"></i> </a> 
-                <a class="right carousel-control" href="#thumbcarousel" role="button" data-slide="next"><i class="fa fa-angle-right" aria-hidden="true"></i> </a>
+                <!-- /carousel-inner  -->
+                <!-- <a class="left carousel-control" href="#thumbcarousel" role="button" data-slide="prev"> <i class="fa fa-angle-left" aria-hidden="true"></i> </a> 
+                <a class="right carousel-control" href="#thumbcarousel" role="button" data-slide="next"><i class="fa fa-angle-right" aria-hidden="true"></i> </a> -->
             </div><pre></pre>
             <div class="col-10">
                 <h3>Instructions:</h3>
@@ -129,7 +129,6 @@
                 console.log(sequence)
                 // if(sequence.length > 6){
                 //     alert("only 5 points");
-                
                 //     // $(this).hasClass('chosen')){
                 //     // $(this).css({'background-color':'transparent'});
                 //     // $(this).removeClass('chosen');
@@ -142,7 +141,7 @@
             event.stopPropagation();
             var cleanup = /\"|\'|\)/g;
             var bg_img = $(".picgrid").css("background-image");
-            console.log(bg_img)
+            console.log(bg_img);
             if (sequence.length != 0 && sequence.length < 6){
                 $.ajax({
                     url : '/pass',

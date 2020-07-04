@@ -27,24 +27,20 @@ def uploaded_file(filename):
 contents=""
 @app.route('/main', methods=['GET','POST'])
 def main():
-    
     if request.method == 'POST':
-        data = request.form.get('txt')
-        lines = (request.form.get('lns'))
-        print("lines")
-        print(lines)
-        print("text")
+        print("under post")      
+        data = request.form.get('text')
+        lines = request.form.get('lines')
+        print("post")
         print(data)
-        #get the numer f lines and data form
         if data != None:
             if lines == None:
-                lines = str(10)
-            session['lines'] = lines
-            session['text'] = data
-            print("l")
-            print(lines)
+                lines = str(13)
             print(data)
-            return redirect(url_for('text_result'))
+            print(lines)
+            session['lines'] = str(lines)
+            session['data'] = data
+            return redirect(url_for('text_result'))      
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -64,16 +60,12 @@ def main():
             ext = filename.rsplit('.',1)[1]
             # print("ext"+ext)
             if ext == 'pdf':
-                contents=extract_text_from_pdf('static\\uploaded_files\\' + filename)
-                print(contents)
-                session['data'] = contents
+                contents = extract_text_from_pdf('static\\uploaded_files\\' + filename)
                 return render_template('main.html', content = contents)
             else:
-                contents=extract_text('static\\uploaded_files\\' + filename)
-                print(contents)
-                session['data'] = contents
+                contents = extract_text('static\\uploaded_files\\' + filename)
                 return render_template('main.html', content = contents)
-        
+        # print(request.form.get("text"))
     else:
         contents=""
         print("get")
@@ -86,6 +78,7 @@ def text_result():
         data = session.get('data', None)
         lines = session.get('lines',None)
         print(lines)
+        print(data)
         if not (data and lines) == None:
             # lines = int(lines)
             # print(data)
@@ -97,10 +90,10 @@ def text_result():
         else:
             print(result)
             result = None
-            return redirect(url_for('main'))
+            return redirect(url_for('site'))
     else:
         print(result)
-        return redirect(url_for('main'))
+        return redirect(url_for('userdash'))
 
 # @app.route('/display_error')
 # def some_error():
@@ -153,11 +146,6 @@ def password():
             print("no data")
     return render_template('pass1.html')
 
-@app.route('/adminlog', methods=['POST', 'GET'])
-def admin():
-    if request.method == "POST":
-        return redirect(url_for('userdash'))
-    return render_template('adminlog.html')
 
 @app.route('/confirm')
 def reg_confirmation():
@@ -199,10 +187,13 @@ def login():
     if request.method == 'POST':
         m = request.form['mail'].strip()
         re['user_record'] = duplicate_mail(m)
-        print(re)
-        if re != {}:
+        print("re value")
+        print(re['user_record'])
+        if re['user_record'] != None:
             val = re['user_record']
             v = passowrd_set_or_not(val)
+            print("value of v")
+            print(v)
             if v != 0:
             # if re['user_record']['image_name'] 
                 n = re['user_record']['image_name']
@@ -212,6 +203,9 @@ def login():
                 return redirect(url_for('userpassword'))
             else:
                 return render_template('login.html', error ="Your password is not set. Please click on forget password to set your password.")
+        else:
+            print("when record is none.")
+            return render_template('login.html', error = "E-mail is not registered.Please register yourself.") 
         # check that mail exist in db
     return render_template('login.html')
 
@@ -230,6 +224,28 @@ def some_error():
 @app.route('/demo')
 def demo():
     return render_template('checking.html')
+
+@app.route('/adminlog', methods=['POST', 'GET'])
+def admin():
+    return render_template('adminlog.html')
+
+@app.route('/dash')
+def admin_dash():
+    return render_template('admindash.html')
+
+@app.route('/main_replica', methods=['GET','POST'])
+def main_replica():
+    if request.method == 'POST':
+        name = request.form['name']
+        num = request.form['number']
+        print(name)
+        print(num)
+        if name and num:
+            return render_template('checking.html')
+        else:
+            return redirect(url_for('main_replica'))
+    else:
+        return render_template('main_replica.html')
     
 if __name__ == "__main__":
     app.run(debug=True)

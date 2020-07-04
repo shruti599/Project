@@ -35,16 +35,14 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
 </style>
 {% endblock %}
 {% block body %}
-<div class="container-fluid">
 
+<div class="container-fluid">
     <div class="row mt-5">
         <div class="offset-2 col-sm-6">
-            <form method="POST" enctype="multipart/form-data" action="text_result"> 
-                <form>
-                    <textarea id="text" name="text" placeholder="Type Here"  rows="10" cols="40">{{content}} </textarea>
-                   <div class="message"></div>
-                 </form>
-                <div clss="row">
+            <form method="POST" enctype="multipart/form-data" name="content_form" > 
+                <textarea id="text" name="text" placeholder="Type Here"  rows="10" cols="40">{{content}} </textarea>
+                <div class="message"></div>
+                <div class="row">
                     <div class="offset-5 col-sm-6">
                         <select id="lines" name="lines" class="btn btn-info">
                             {% for i in range(10,100,3)%}
@@ -53,8 +51,8 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
                         </select>
                     </div>
                     <div>
-                        <input type="submit" value="Submit" id="submit" class="btn btn-info">
-                        <input type="submit" value="Reset" id="reset" class="btn btn-info">
+                        <button type="submit" value="Submit" id="submit" name="submit" class="btn btn-info">Submit</button>
+                        <button type="reset" id="reset" name="reset" class="btn btn-info">Reset</button>
                     </div>
                 </div>
             </form>
@@ -65,11 +63,11 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
             </div>
             <div class="card" style="background-color: rgb(247, 248, 247);">
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" name="second_form">
                         <div class="form-group">
-                            <input type="file" name="file">
+                            <input type="file" name="file" id="file">
                             <br>
-                            <input class="padding" type="submit" value="Upload">
+                            <input class="padding" type="submit" value="Upload" id="upload" name="upload">
                         </div>
                     </form>
                 </div>
@@ -82,36 +80,41 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
 <script>
     $(function (){
         $('#submit').click( function(event){
-            event.preventDefault();
-            event.stopPropagation();
+            // event.preventDefault();
+            // event.stopPropagation();
             var text = $('#text').text();
             var lines = $('#lines').text();
-            if (text != ""){
-                $$.ajax({
-                    type: "POST",
-                    url: "/main",
-                    data: {
-                        txt = text.toString(),
-                        lns = lines.toString(),
-                    },
-                    success: function (response) {
-                        console.log(response)
-                    },
-                    error: function (response){
-                        console.log(response)
-                    }
-                });
+            text = text.trim();
+            alert(text.length);
+            if (text.length != 0)
+            {
+                alert("data is there");
+            // alert(lines);
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/main",
+                //     data: {
+                //         txt = text.toString(),
+                //         lns = lines.toString(),
+                //     },
+                //     success: function (response){
+                //         console.log(response);
+                //     },
+                //     error: function (response){
+                //         console.log(response);
+                //     }
+                // });
             }
             else{
-                alert("Nothing to summarize");
+                alert("no content to summarize");
             }
-        })
-    })
+        });
+    });
 
-    $(function () {
+$(function () {
     "use strict";
     
-    var maxText = $("textarea").attr("maxlength"),
+    var maxText = $("textarea").attr("maxlength");
         
         ourMessage = $(".message");
     
@@ -119,15 +122,13 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
     
     $("textarea").keyup(function () {
        
-        var textLength = $(this).val().length,
+        var textLength = $(this).val().length;
             
             remText = maxText - textLength;
         
         ourMessage.html('<span>' + remText + '</span> Characters Remaining');
         
     });
-
-
 });
 </script>
 {% endblock %}
