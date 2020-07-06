@@ -12,9 +12,8 @@ myserver = pymongo.MongoClient("mongodb://localhost:27017")
 socket.getaddrinfo('localhost',8080)
 mydb = myserver["Summarizer_Database"]
 
-Users_Detail=mydb["User_Datail"] #personal details of user 
-Users_Content=mydb["User_Content"] #content detail of users
-
+Users_Detail = mydb["User_Datail"] #personal details of user 
+Users_Content = mydb["User_Content"] #content detail of users
 
 # def d():
 #     em = {}
@@ -29,12 +28,10 @@ def display():
     for i in q:
         print(i)
 
-
 # def display_content():
 #     q =  Users_Content.find()
 #     for i in q:
 #         print(i)
-
 
 # print(mydb.list_collection_names())
 # print(myserver.list_database_names())
@@ -134,6 +131,7 @@ def mail_for_password(mail):
     conn.sendmail(email, send_to_email, text)
     conn.quit()
     return True
+
 
 
 def delete():

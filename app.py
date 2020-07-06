@@ -23,23 +23,24 @@ def allowed_file(filename):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
-
+content_detail=""
 contents=""
 @app.route('/main', methods=['GET','POST'])
 def main():
+    global content_detail
     if request.method == 'POST':
-        print("under post")      
+        print("under post")
         data = request.form.get('text')
         lines = request.form.get('lines')
         print("post")
         print(data)
         if data != None:
-            if lines == None:
-                lines = str(13)
-            print(data)
+            if lines == None: 
+                lines = str(13)  #temporary assigning here
             print(lines)
             session['lines'] = str(lines)
-            session['data'] = data
+            content_detail = data
+            print(content_detail)
             return redirect(url_for('text_result'))      
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -74,14 +75,15 @@ def main():
 @app.route('/text_result' ,methods = ['GET', 'POST'])
 def text_result():
     result = ""
+    global content_detail
     if request.method == 'GET':
-        data = session.get('data', None)
+        data = content_detail
         lines = session.get('lines',None)
         print(lines)
-        print(data)
-        if not (data and lines) == None:
-            # lines = int(lines)
-            # print(data)
+        print("data",data)
+        if data != "":
+            if lines != None:
+                lines = str(13)
             result = json.loads(summarize(data,lines))
             print(result)
             if result !=  "":
