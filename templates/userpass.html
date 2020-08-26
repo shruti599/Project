@@ -68,13 +68,9 @@
 
 {% block js %}
 <script>
-    $(document).ready(function(){
-        var pth = $('#path').text();
-        $('.picgrid').css("background-image", "url(" + pth + ")");
-    });
 
     $(function () {
-        let sequence = new Array()
+        let sequence = new Array();
         $('.box').each(function(index){
             $(this).click(function(){
                 if ($(this).hasClass('chosen')){
@@ -83,10 +79,10 @@
                     sequence.pop(index);
                 }else{
                     $(this).css({'background-color':'olive'});
-                    $(this).addClass('chosen')
+                    $(this).addClass('chosen');
                     sequence.push(index);
                 }
-                console.log(sequence)
+                console.log(sequence);
             });
         });
         $('#submit').click('image', function(event){
@@ -94,25 +90,37 @@
             event.stopPropagation();
             var cleanup = /\"|\'|\)/g;
             if (sequence.length != 0){
+                // alert("points selected");
                 $.ajax({
-                    url : '/userpass', // it will be /userpass
+                    url : '/userpass',
                     type : 'POST',
                     data:{
                         'seq'   : JSON.stringify(sequence),
                     },
                     success: function (response){
                         console.log(response);
+                        alert("Login successfully");
+                        window.location.replace('http://127.0.0.1:5000/main');
+                        // $('#cbox').html(response);
                     },
                     error: function (error){
                         console.log(error);
                     },
                 });
+                // event.stopPropagation();
             }
             else{
-                alert("You have not selected any point. Please select atleast one point.")
+                alert("You have not selected any point. Please select atleast one point.");
+                // event.preventDefault();
             }
         });
     });
+
+    $(function(){
+        var pth = $('#path').text();
+        $('.picgrid').css("background-image", "url(" + pth + ")");
+    });
+
 </script>
 {% endblock %}
 

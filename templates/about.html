@@ -1,14 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>About Us</title>
-</head>
-<body>
-    About US
+{% extends 'layout.html' %}
+
+{% block cs %}
+<style>
+    body,h1,h2,h3,h4,h5,h6 {font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif}
+    
+    body, html {
+      height: 100%;
+      line-height: 1.8;
+    }
+    
+    /* Full height image header */
+    .bgimg-1 {
+      background-position: center;
+      background-size: cover;
+      background-image: url("/w3images/mac.jpg");
+      min-height: 100%;
+    }
+    
+    .w3-bar .w3-button {
+      padding: 16px;
+    }
+    </style>
+
+
+{% endblock %}
+
+{% block body %}
+    <!-- About Section -->
+<div class="w3-container" style="padding:70px 10px" id="about">
+    <h3 class="w3-center">ABOUT THE SUMMARIZER</h3>
+    <p class="w3-center w3-large">Key features of our web application</p>
+    <div class="w3-row-padding w3-center" style="margin-top:64px">
+      <div class="w3-quarter">
+        <i class="fa fa-desktop w3-margin-bottom w3-jumbo w3-center"></i>
+        <p class="w3-large">Responsive</p>
+        <p>We apply state-of-the-art artificial intelligence, machine learning, natural language processing and blockchain technologies to simplify complex processes and automate what previously required human-level intelligence.</p>
+      </div>
+      <div class="w3-quarter">
+        <i class="fa fa-heart w3-margin-bottom w3-jumbo"></i>
+        <p class="w3-large">Passion</p>
+        <p>Our company developed and patented the most advanced AI analytical algorithms for legal, consulting, financial, publishing, media, automotive, healthcare, pharmaceutical, hospitality, travel and others industries.</p>
+      </div>
+      <div class="w3-quarter">
+        <i class="fa fa-diamond w3-margin-bottom w3-jumbo"></i>
+        <p class="w3-large">Design</p>
+        <p>Summarizer team at the moment focused on global scientific problems solving related to extractive summarization, question answering systems and predictive analytics for fintech industry.</p>
+      </div>
+      <div class="w3-quarter">
+        <i class="fa fa-cog w3-margin-bottom w3-jumbo"></i>
+        <p class="w3-large">Support</p>
+        <p>The team constantly is invited to take part in international data science challenges and competitions, that allows us to be on the wave of the latest AI and machine learning trends.</p>
+      </div>
+    </div>
+  </div>
     
     <br><br><a href="/">Go Back to Homepage</a>
-</body>
-</html>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        // Modal Image Gallery
+        function onClick(element) {
+          document.getElementById("img01").src = element.src;
+          document.getElementById("modal01").style.display = "block";
+          var captionText = document.getElementById("caption");
+          captionText.innerHTML = element.alt;
+        }
+        
+        
+        // Toggle between showing and hiding the sidebar when clicking the menu icon
+        var mySidebar = document.getElementById("mySidebar");
+        
+        function w3_open() {
+          if (mySidebar.style.display === 'block') {
+            mySidebar.style.display = 'none';
+          } else {
+            mySidebar.style.display = 'block';
+          }
+        }
+        
+        // Close the sidebar with the close button
+        function w3_close() {
+            mySidebar.style.display = "none";
+        }
+        </script>
+{% endblock %}

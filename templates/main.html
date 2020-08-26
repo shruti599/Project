@@ -45,7 +45,8 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
                 <div class="row">
                     <div class="offset-5 col-sm-6">
                         <select id="lines" name="lines" class="btn btn-info">
-                            {% for i in range(10,100,3)%}
+                            <option >0</option>
+                            {% for i in range(10,500,3)%}
                             <option value="{{i}}">{{i}}</option>
                             {% endfor %}
                         </select>
@@ -80,33 +81,22 @@ textarea:hover{box-shadow:0px 0px 13px 0px deepskyblue}
 <script>
     $(function (){
         $('#submit').click( function(event){
-            // event.preventDefault();
-            // event.stopPropagation();
-            var text = $('#text').text();
-            var lines = $('#lines').text();
+            var text = $('#text').val();
+            var lines = $('#lines').val();
             text = text.trim();
-            alert(text.length);
-            if (text.length != 0)
+            alert(text.length + lines);
+            if (text.length != 0 && lines != 0 )
             {
+                event.stopPropagation();
                 alert("data is there");
-            // alert(lines);
-                // $.ajax({
-                //     type: "POST",
-                //     url: "/main",
-                //     data: {
-                //         txt = text.toString(),
-                //         lns = lines.toString(),
-                //     },
-                //     success: function (response){
-                //         console.log(response);
-                //     },
-                //     error: function (response){
-                //         console.log(response);
-                //     }
-                // });
             }
             else{
-                alert("no content to summarize");
+                if(text.length != 0)
+                {    alert("no content to summarize"); }
+                else{
+                    alert("Please select number of lines.")
+                }
+                event.preventDefault();
             }
         });
     });

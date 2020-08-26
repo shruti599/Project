@@ -5,7 +5,6 @@ def summarize(querydata,lines, key = 'ad26a38d88e40eff5160affcd452b5ca'):
     params = {'key':key, 'txt':querydata,'sentences':str(lines)}
     results = requests.get(url,params=params)
     if results.status_code==200:
-        print(results.text)
         return results.text
     else:
         return ""
