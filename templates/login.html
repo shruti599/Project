@@ -130,13 +130,9 @@
                         <input type="email" name="mail" class="form-control" id="mail" placeholder="Email">  
                         
                         {% if error %}
-                        <p id = "msg">  {{error}}</p>
+                        <small id = "msg">  {{error}}</small>
                         {% endif %}           
-                        
                     </div>
-                    <!-- <div class="row align-items-center remember">
-                        <input type="checkbox">Remember Me
-                    </div> -->
                     <div class="form-group"> 
                         <input type="submit" value="Login" class="btn float-right login_btn" href="/userpass" onclick="validation()">
                     </div>
@@ -177,15 +173,6 @@
 {% endblock %}
 {% block js %}
 <script>
-    $(documnet).ready(function(){
-        // alert("hello");
-        var err_msg = $('#msg').text();
-        alert("hey");
-        if(err_msg != '')
-        {
-            alert(err_msg);
-        }
-    });
     $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var recipient = button.data('whatever'); // Extract info from data-* attributes

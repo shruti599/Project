@@ -5,7 +5,7 @@ import os
 import json
 from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
 import re
-from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password, insert_modified_content, insert_summary
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password, insert_modified_content, insert_summary, particular_user_contents, total_document, all_user
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
@@ -292,23 +292,19 @@ def text_result():
 
 @app.route('/userdash')
 def userdash():
-    return render_template('userdash.html')
+    global logged_email
+    mail = logged_email
+    user_detail = duplicate_mail(mail)
+    content_detail = particular_user_contents(mail)
+    return render_template('userdash.html', usrdetail = user_detail, contdetail = content_detail)
 
 @app.route('/useraccount')
 def useraccount():
     return render_template('useraccount.html')
 
-@app.route('/confpass')
-def reg_confirm():
-    return render_template('confpass.html')
-
 @app.route('/')
 def site():
     return render_template('index.html')
-
-@app.route('/demo')
-def demo():
-    return render_template('checking.html')
 
 @app.route('/adminlog', methods=['POST', 'GET'])
 def admin():
@@ -316,7 +312,9 @@ def admin():
 
 @app.route('/dash')
 def admin_dash():
-    return render_template('admindash.html')
+    count = total_document()
+    user_detail = all_user()
+    return render_template('admindash.html', total = count, users = user_detail)
 
 @app.route('/about', methods=['GET','POST'])
 def about():

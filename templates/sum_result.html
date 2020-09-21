@@ -11,9 +11,9 @@
                 <label for="results">Results</label>
                 {% if results %}
                 <textarea class="form-control" name="results" id="results" rows="8" cols="8">{{results['summary']}}</textarea>
+                {% else %}
+                <div id="result"></div>
                 {% endif %}
-                <!-- <div id="result" onload="fun()"></div>
-                {% endif %} -->
             </div>
             <div>
                 <a href="/main" class="section-btn btn btn-primary smoothScroll">Generate New Summary</a>
@@ -24,9 +24,7 @@
 </div>
 {% endblock %}
 {% block js %}
-<!-- <script>
-    function fun(){
-        alert("Nothing to summarize")
-    } -->
+<script>
+
 </script>
 {% endblock %}

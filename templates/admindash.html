@@ -196,8 +196,8 @@
             
            
     </div>
-        <div class="col-md-6"> 
-            <form method="POST" name="search_form">
+        <div class="offset-1 col-md-9"> 
+            <form  name="search_form">
             View data of customer according :
             <select id="opt" name="opt" >
                 <option value="All">All</option>
@@ -208,19 +208,31 @@
                 <option value="1 year">1 year</option>
             </select>  
             <buton class="btn btn-info" type="submit" id="search" name="search">Search</buton>   
-        </form>              
-            <section class="box"></section>
+        </form>
+                      
+            <section class="box">
+                <table>
+                    <thead>
+                        <th>Sno.</th>
+                        <th>User Name</th>
+                        <th>Last Login detail</th>
+                    </thead>
+                    <tbody>
+                        {% for i in range(total) %}
+                        <tr>
+                            <td>{{ i+1 }}</td>
+                            <td>  {{users['username']}}</td>
+                            <td> {{users['lastlogin']}} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
         
         </div>
-        <div class="col-md-6">              
-            <section class="box"></section>
-        </div>
+        <!--**************clearfix**************-->
         
-        <div class="clearfix"></div> <!--**************clearfix**************-->
-        
-        <div class="col-md-12">              
-            <section class="box"></section>
-        </div>
+    </div>
         
     </section>
 </section>

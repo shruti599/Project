@@ -33,6 +33,14 @@
         <li class="nav-item">
             <a class="nav-link  text-white" href="/adminlog">Admin Login</a>
         </li>
+        {% if logged_in == True%}
+        <li>
+             <a class="nav-link  text-white" href="/userdash">User</a>
+        </li>
+        {% endif %}
+        <li>
+
+        </li>
     </ul>
 
     {% block body %}{% endblock %}

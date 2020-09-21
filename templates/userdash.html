@@ -38,11 +38,11 @@
     margin-right: 50px;
     margin-top: 50px;
   }
-
-.contain{
-  height:100%;
-}
-
+  
+  .contain{
+    height:100%;
+  }
+  
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
@@ -52,7 +52,7 @@
 {% endblock %}
 {% block body %}
 <div class="sidenav">
-  <a href="#dashboard">Dashboard</a>
+  <a href="/userdash">Dashboard</a>
   <a href="#newuploads">Upload</a>
   <a href="/useraccount">My Account</a>
   <a href="#signout">SignOut</a>
@@ -61,30 +61,32 @@
 <div class="container-fluid">
   <div class="offset-1 row mt-5">
     <div class="offset-1 col-sm-7 border">
-      Uploads
+      <br>
       <div class="card">
         <div class="card-header">
-          Featured
+          
+          Uploads
         </div>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+        <br>
+        
+        
+        <div class="card">
+          1
+          Content : <textarea row="3" cols="4" readonly scroll style="resize:none" class="form-control"> {{ contdetail['Modified_content'] }} </textarea>
+          Summary : <textarea row="3" cols="4" readonly scroll style="resize:none" class="form-control"> {{ contdetail['Summary'] }} </textarea>
         </div>
-      </div>
-    </div>
-    <div class="offset-8.5 col-sm-4 border">
-      <div class="card info" >
-        <img class="card-img-top" src="/static/images/user.png" alt="Image">
-        <div class="card-body">
-          <input class="form-control" type="text" placeholder="Name" readonly>
-          <input class="form-control" type="text" placeholder="Address" readonly>
-          <input class="form-control" type="text" placeholder="E-Mail" readonly>
-          <input class="form-control" type="text" placeholder="Phone No." readonly>
         </div>
       </div>
-    </div>
-  </div>  
-</div>
-
-{% endblock %}
+      <div class="offset-8.5 col-sm-4 border">
+        <div class="card info" >
+          <img class="card-img-top" src="/static/images/user.png" alt="Image">
+          <div class="card-body">
+            <text class="form-control" type="text" readonly> {{ usrdetail["username"] }} </text>
+            <text class="form-control" type="text"  readonly> {{ usrdetail['email'] }} </text>         
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+  
+  {% endblock %}

@@ -15,27 +15,22 @@ mydb = myserver["Summarizer_Database"]
 Users_Detail = mydb["User_Datail"] #personal details of user 
 Users_Content = mydb["User_Content"] #content detail of users
 
-# def d():
-#     em = {}
-#     a = Users_Detail.find().sort("email")
-#     for i in a:
-#         em["mail"] = i["email"]
-#         if i["email"] == em["mail"]:
-#             Users_Detail.delete_one(i)
-
 def display():
     q = Users_Detail.find()
     for i in q:
         print(i)
 
 # display()
-# def display_content():
-#     q =  Users_Content.find()
-#     for i in q:
-#         print(i)
+# display()
+def display_content():
+    q =  Users_Content.find()
+    for i in q:
+        print(i)
 
-# print(mydb.list_collection_names())
-# print(myserver.list_database_names())
+# display_content()
+print(mydb.list_collection_names())
+print(myserver.list_database_names())
+
 # function for entering record of user
 def insert_precord(username,email):
     c = duplicate_mail(email)
@@ -61,14 +56,14 @@ def insert_srecord(mail, o_content):
 
 def insert_modified_content(mail, m_content):
     q = {'email' : mail}
-    value = {'modified_content' : m_content}
+    value = {'Modified_content' : m_content}
     user = Users_Content.update_one(q, {"$set":value})
     print("modified content added")
     return True
 
 def insert_summary(mail, summary):
     q = {'email' : mail}
-    value = {'summary' : summary}
+    value = {'Summary' : summary}
     user = Users_Content.update_one(q, {"$set" : value})
     print("summary added")
     return True
@@ -79,7 +74,13 @@ def duplicate_mail(mail):
     a = Users_Detail.find_one(query)
     return a
 
-#funtion to insert password for the given email
+def particular_user_contents(mail):
+    query = {'email' : mail}
+    details = Users_Content.find(query)
+    print(details)
+    return details
+
+# funtion to insert password for the given email
 def insert_password(mail, sequence, img):
     if img and mail and sequence:
         a = duplicate_mail(mail)
@@ -94,7 +95,7 @@ def insert_password(mail, sequence, img):
             return 'False'
     return 0
 
-#function for checking password
+# function for checking password
 def password_checker(mail, enter_pass):
     a = duplicate_mail(mail)
     print("enter_pass", enter_pass, type(enter_pass))
@@ -183,11 +184,22 @@ def mail_for_password(mail):
     conn.quit()
     return True
 
-def delete():
-    q = {'email' : ""}
-    a = Users_Detail.find_one_and_delete(q)
+def total_document():
+    query = Users_Detail.find().count()
+    print(query)
+    return query
+
+def all_user():
+    q = Users_Detail.find()
+    return q
 
 
+# def delete():
+#     q = {'email' : "shrmsh.1999@gmail.com"}
+#     a = Users_Content.delete_many(q)
+#     print("deleted")
+
+# delete()
 
 # password_checker('shrmsh.1999@gmail.com',[238 ,255])
 # display()
