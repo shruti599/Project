@@ -14,6 +14,9 @@
     .shifting{
         align-items: right;
     }
+    .hide{
+        visibility: hidden;
+    }
 </style>
 
 {% endblock %}
@@ -27,28 +30,31 @@
             </div>
             <div class="card" style="background-color: rgb(247, 248, 247);">
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data" > 
-                        New to page! Signup below 
+                    <form method="POST" enctype="multipart/form-data" role="form" > 
+                        <b>New to page! Signup below </b>
                         <div class="form-group">
-                            <!-- <label for="username">Username</label> -->
+                            <br>
+                            <label for="username">Username</label>
                             <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
                         </div>
                         <div class="form-group">
                             <auto-check src=""></auto-check>
                             <label for="mail">Email address</label>
                             <input type="email" name="mail" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Enter email" required>
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                             {% if errors != "" %}
-                               <small id="mailexist" class="form-text text-muted"> {{errors}} </small>                                
+                                <div> {{errors}} </div>                                
                             {% endif %}
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                         </div>
                         <div class="form-group">
                             Already have an account?<a href="/login">Sign-In</a>
+                            
                             <input type="image" class="i" width="10%" name="next" id="next" src="/static/images/forward.png" alt="next" align="right">
                         </div>
                     </form>
                 </div>
             </div>
+            
         </div>
         <div class="col-sm-6">
             <img src="/static/images/macbooknew.png" class="i" width="120%" alt="">
@@ -61,19 +67,66 @@
 {% block js %}
 
 <script>
-$(document).ready(function(){
-    $('#username').bootstrapValidator({
-        fields: {
-            username: {
-                validators: {
-                    regexp: {
-                        regexp: /^[a-z\s]+$/i,
-                            message: 'The full name can consist of alphabetical characters and spaces only'
-                        }
-                    }
-                }
-            }
-        });
-    });                                                      
+// function if_mail_exist(e){
+//     user = $('#username').val();
+//     mail = $('#mail').val();
+//     $.ajax({
+//         type: "POST",
+//         url: "/process",
+//         data: {
+//             'user' : user,
+//             'mail' : mail
+//             },
+//         success : function (response) {
+//             alert("done")
+//         },
+//         error : function (response){
+//             alert("failure")
+//         },
+//     });
+// }
+// function if_mail_exist(e){
+//     // user = $('#username').val();
+//     // mail = $('#mail').val();
+//     $.ajax({
+//         type: "POST",
+//         url: "/process",
+//         data: $('form').serialize(),
+//         success: function (response){
+//             console.log(response)
+//             alert("done")
+//         },
+//         error : function (error){
+//             console.log(error)
+//             alert("errro")
+//         }
+//     });
+// }
+// $(document).ready(function(){
+//     $('.i').click(function(e){
+//         if_mail_exist(e)
+//     });
+    // $('#username').bootstrapValidator({
+    //     fields: {
+    //         username: {
+    //             validators: {
+    //                 regexp: {
+    //                     regexp: /^[a-z\s]+$/i,
+    //                         message: 'The full name can consist of alphabetical characters and spaces only'
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }); 
+
+    // $(function(){
+    //     var err = $('#mailexist').val();
+    //     alert(err.length);
+    //     if (err.length != 0)
+    //     {
+    //         alert(err);
+    //     }
+    // })                                                     
 </script>
 {% endblock %}

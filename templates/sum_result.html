@@ -4,23 +4,29 @@
 
 {% endblock %}
 {% block body %}
-<div class="form-group">
-    <label for="results">Results</label>
-    {% if results %}
-    <textarea class="form-control" name="results" id="results" rows="8" cols="8">{{results['summary']}}</textarea>
-    {% else %}
-    <div id="result" onload="fun()"></div>
-    {% endif %}
-</div>
-<div>
-    <a href="/main" class="section-btn btn btn-primary smoothScroll">Generate New Summary</a>
-    <a href="/userdash" class="section-btn btn btn-primary smoothScroll">Dashboard</a>
+<div class ="container-fluid">
+    <div class="row mt-6">
+        <div class="offset-2 col-sm-9">
+            <div class="form-group">
+                <label for="results">Results</label>
+                {% if results %}
+                <textarea class="form-control" name="results" id="results" rows="8" cols="8">{{results['summary']}}</textarea>
+                {% endif %}
+                <!-- <div id="result" onload="fun()"></div>
+                {% endif %} -->
+            </div>
+            <div>
+                <a href="/main" class="section-btn btn btn-primary smoothScroll">Generate New Summary</a>
+                <a href="/userdash" class="section-btn btn btn-primary smoothScroll">Dashboard</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block js %}
-<script>
+<!-- <script>
     function fun(){
         alert("Nothing to summarize")
-    }
+    } -->
 </script>
 {% endblock %}

@@ -52,11 +52,26 @@ def insert_precord(username,email):
         display()
         return 1
 
-def insert_srecord(mail, o_content, m_content):
-    value = {'email': mail, 'Orignal_content': o_content, 'Modified_content': m_content}
+def insert_srecord(mail, o_content):
+    value = {'email': mail, 'Orignal_content': o_content}
+    # 'Modified_content': m_content}
     y = Users_Content.insert_one(value)
-    print("content saved")
+    print("original content saved")
     return 1
+
+def insert_modified_content(mail, m_content):
+    q = {'email' : mail}
+    value = {'modified_content' : m_content}
+    user = Users_Content.update_one(q, {"$set":value})
+    print("modified content added")
+    return True
+
+def insert_summary(mail, summary):
+    q = {'email' : mail}
+    value = {'summary' : summary}
+    user = Users_Content.update_one(q, {"$set" : value})
+    print("summary added")
+    return True
 
 # function to check whether email already exists
 def duplicate_mail(mail):

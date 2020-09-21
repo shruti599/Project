@@ -1,11 +1,11 @@
-from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, session
+from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory, session, jsonify
 from werkzeug.utils import secure_filename
 from summarize import summarize
 import os
 import json
 from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
 import re
-from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password, insert_modified_content, insert_summary
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
@@ -47,9 +47,26 @@ def register():
             return redirect(url_for('password'))
         else:
             errors = "Email exist"
-            return render_template('registration.html',errors = errors)
-    else:
-        return render_template('registration.html')
+            return render_template('registration.html', errors = errors)
+    # else:
+    return render_template('registration.html')
+
+# @app.route('/process', methods=['POST'])
+# def rprocess():
+#     # user = request.form('user')
+#     # mail = request.form('mail')
+#     user = request.agrs.get('user')
+#     mail = request.args.get('mail')
+#     user = user.strip()
+#     mail = mail.strip()
+#     return_value = insert_precord(user,mail)
+#     if return_value == 1 :
+#         response = "Successfully regiertered. Please set password."
+#         # return json.dumps({'status':response})
+#     else:
+#         response = "This email already exist!"
+#         # return json.dumps({'status':error})
+#     return jsonify({'success':response})
 
 #if email exits then send password to that mail & store it in db  
 
@@ -87,6 +104,7 @@ def login():
         print("mail", m)
         print("forget_mail", forget_mail)
         if m != None:
+            # when user login
             re['user_record'] = duplicate_mail(m)
             print("re value",re['user_record'])
             if re['user_record'] != None:
@@ -104,6 +122,7 @@ def login():
                 print("when record is none.")
                 return render_template('login.html', error = "E-mail is not registered.Please register yourself.") 
         elif forget_mail != None:
+            # when user enter email for forget password
             re['user_record'] = duplicate_mail(forget_mail)
             print("re value",re['user_record'])
             if re['user_record'] != None:
@@ -111,7 +130,7 @@ def login():
                 #check if mail is correct or not
                 return render_template('login.html', message = "Password link send to your mail.")
             else:
-                return render_template('login.html', err = "You")
+                return render_template('login.html', err = "Not registered")
     return render_template('login.html')
 
 @app.route('/userpass', methods=['GET','POST'])
@@ -152,20 +171,23 @@ contents=""
 def main():
     global content_detail
     global logged_in
+    global logged_email
+    mail = logged_email
     # mail = session('email_value',None)
     if request.method == 'POST':
-        print("under post")
+        # print("under post")
         data = request.form.get('text')
         lines = request.form.get('lines')
-        print("post")
-        print(data)
+        # print("post")
+        # print(data)
         if data != None:
             if lines == None: 
                 lines = str(13)  #temporary assigning here
             print(lines)
             session['lines'] = str(lines)
             content_detail = data
-            print(content_detail)
+            rslt = insert_modified_content(mail, content_detail)
+            # print(content_detail)
             return redirect(url_for('text_result'))      
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -187,11 +209,14 @@ def main():
             # print("ext"+ext)
             if ext == 'pdf':
                 contents = extract_text_from_pdf('static\\uploaded_files\\' + filename)
+                if contents != None:
+                    
+                    result = insert_srecord(mail, contents)
                 return render_template('main.html', content = contents)
             else:
                 contents = extract_text('static\\uploaded_files\\' + filename)
+                result = insert_srecord(mail, contents)
                 return render_template('main.html', content = contents)
-        # print(request.form.get("text"))
     else:
         print("value of logged_in",logged_in)
         if logged_in == True:
@@ -205,26 +230,33 @@ def main():
 def text_result():
     result = ""
     global content_detail
+    global logged_email
+    mail = logged_email
     if request.method == 'GET':
         data = content_detail
-        lines = session.get('lines',None)
+        lines = session.get('lines', None)
         print(lines)
-        print("data",data)
+        print("data", data)
         if data != "":
             if lines != None:
                 lines = str(13)
-            result = json.loads(summarize(data,lines))
+            result = json.loads(summarize(data, lines))
             print(result)
             if result !=  "":
-                session['summary']=result
-                return render_template('sum_result.html', results=result)
+                # session['summary'] = result
+                temp = insert_summary(mail, result['summary'])
+                if temp == True:
+                    return render_template('sum_result.html', results = result)
+                else:
+                    return render_template('main')
         else:
-            print(result)
+            print("result: data is empty")
             result = None
-            return redirect(url_for('site'))
+            return redirect(url_for('main'))
     else:
-        print(result)
-        return redirect(url_for('userdash'))
+        print("result: Post")
+        return redirect(url_for('main'))
+
 
 # @app.route('/display_error')
 # def some_error():
