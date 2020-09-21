@@ -191,6 +191,25 @@
         var recipient = button.data('whatever'); // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var f_mail = $('#forget-mail').val();
+        if ( f_mail.length != 0 )
+        {
+            $.ajax({
+                url : '/login',
+                type : "POST",
+                data : {
+                    'forget_mail' : f_mail
+                },
+                success : function(response){
+                    console.log(response);
+                    window.location.replace('http://127.0.0.1:5000/confirmation');
+                },
+                error : function(response){
+                    alert("Please check your email.")
+                    console.log(error);
+                },
+            });
+        }
         var modal = $(this);
         modal.find('.modal-title').text('New message to ' + recipient);
         modal.find('.modal-body input').val(recipient);

@@ -161,8 +161,8 @@ def mail_for_password(mail):
     email = 'summarywebapplication@gmail.com'
     password = 'summary@123'
     send_to_email = mail
-    sub = 'Verficication Mail'
-    link = "http://127.0.0.1:5000/pass"
+    sub = 'Reset Password'
+    link = "http://127.0.0.1:5000/reset_password"
     msg = '<p> Please click on the link to reset your password. </p>' + link
 
     m = MIMEMultipart('alertnative')

@@ -28,6 +28,11 @@ logged_in = False
 logged_email = ""
 content_detail=""
 
+def clear_all():
+    logged_in = False
+    logged_email = ""
+    content_detail=""
+    return "cleared"
 
 @app.route('/register',methods = ['GET', 'POST'])
 def register():
@@ -84,6 +89,7 @@ def password():
             val = insert_password(mail, seq, image)
             if val == "True":
                 logged_in = True
+                mail_for_main(mail)
                 return redirect(url_for('reg_confirmation'))
         else :
             print("no data")
@@ -91,11 +97,11 @@ def password():
 
 @app.route('/confirm')
 def reg_confirmation():
-    mail_for_main(mail)
     return render_template('confirm.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    clear_all()
     global logged_email
     re = {}
     if request.method == 'POST':
@@ -115,6 +121,7 @@ def login():
                     n = re['user_record']['image_name']
                     session['image'] = n
                     logged_email = m
+                    logged_in = True
                     return redirect(url_for('userpassword'))
                 else:
                     return render_template('login.html', error ="Your password is not set. Please click on forget password to set your password.")
@@ -124,14 +131,39 @@ def login():
         elif forget_mail != None:
             # when user enter email for forget password
             re['user_record'] = duplicate_mail(forget_mail)
-            print("re value",re['user_record'])
+            print("re value", re['user_record'])
             if re['user_record'] != None:
                 mail_for_password(forget_mail)
+                logged_email = forget_mail
+                logged_in = True
                 #check if mail is correct or not
-                return render_template('login.html', message = "Password link send to your mail.")
+                return redirect(url_for('confirmation_for_forget_password'))
             else:
                 return render_template('login.html', err = "Not registered")
     return render_template('login.html')
+
+@app.route('/confirmation')
+def confirmation_for_forget_password():
+    return render_template('confirmation_for_forget_password.html')
+
+@app.route('/reset_password', methods=['GET','POST'])
+def reset_password():
+    global logged_email
+    mail = logged_email
+    print(mail)
+    if request.method == 'POST':
+        seq = request.form.get('seq')
+        image = request.form.get('image')
+        if image and seq and mail:
+            image = get_image_name(image)
+            print(mail, seq, image)
+            val = insert_password(mail, seq, image)
+            if val == "True":
+                logged_in = True
+                return redirect(url_for('login'))
+        else :
+            print("no data")
+    return render_template('forget_pass.html')
 
 @app.route('/userpass', methods=['GET','POST'])
 def userpassword():
@@ -258,11 +290,6 @@ def text_result():
         return redirect(url_for('main'))
 
 
-# @app.route('/display_error')
-# def some_error():
-#     if session.get('summary') == "":
-#         return render_template('some_error.html')
-
 @app.route('/userdash')
 def userdash():
     return render_template('userdash.html')
@@ -275,17 +302,9 @@ def useraccount():
 def reg_confirm():
     return render_template('confpass.html')
 
-# @app.route('/')
-# def home():
-#     return render_template('home.html') 
-
 @app.route('/')
 def site():
     return render_template('index.html')
-
-@app.route('/some_error')
-def some_error():
-    return render_template('some_error.html')
 
 @app.route('/demo')
 def demo():
