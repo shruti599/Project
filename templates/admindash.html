@@ -2,6 +2,9 @@
 
 {% block css %}
 <style>
+    .table {
+        border: 1px solid black;
+    }
     .page-sidebar {
         height: 100;
         width: 260px;
@@ -211,18 +214,21 @@
         </form>
                       
             <section class="box">
-                <table>
+                <table class="table">
                     <thead>
-                        <th>Sno.</th>
-                        <th>User Name</th>
-                        <th>Last Login detail</th>
+                        
+                        <th class="table">User Name</th>
+                        <th class="table">Date/time</th>
+                        
                     </thead>
                     <tbody>
-                        {% for i in range(total) %}
+                        {% for i in users %}
                         <tr>
-                            <td>{{ i+1 }}</td>
-                            <td>  {{users['username']}}</td>
-                            <td> {{users['lastlogin']}} </td>
+
+                            
+                            <td class="table">  {{ i['username'] }}</td>
+                            <td class="table"> {{ i['lastModified'] }} </td>
+                            
                         </tr>
                         {% endfor %}
                     </tbody>

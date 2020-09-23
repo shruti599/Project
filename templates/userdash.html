@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'userlayout.html' %}
 
 {% block css %}
 <style>
@@ -52,10 +52,9 @@
 {% endblock %}
 {% block body %}
 <div class="sidenav">
-  <a href="/userdash">Dashboard</a>
-  <a href="#newuploads">Upload</a>
+  <!-- <a href="/userdash">Dashboard</a> -->
+  <a href="/main">New Upload</a>
   <a href="/useraccount">My Account</a>
-  <a href="#signout">SignOut</a>
 </div>
 
 <div class="container-fluid">
@@ -69,24 +68,25 @@
         </div>
         <br>
         
-        
+        {% for i in contdetail %}
         <div class="card">
-          1
-          Content : <textarea row="3" cols="4" readonly scroll style="resize:none" class="form-control"> {{ contdetail['Modified_content'] }} </textarea>
-          Summary : <textarea row="3" cols="4" readonly scroll style="resize:none" class="form-control"> {{ contdetail['Summary'] }} </textarea>
+         
+          Content : <textarea row="5" cols="4" readonly scroll style="resize:none" class="form-control"> {{ i['Modified_content'] }} </textarea>
+          Summary : <textarea row="5" cols="4" readonly scroll style="resize:none" class="form-control"> {{ i['Summary'] }} </textarea>
         </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="offset-8.5 col-sm-4 border">
+      <div class="card info" >
+        <img class="card-img-top" src="/static/images/user.png" alt="Image">
+        <div class="card-body">
+          <text class="form-control" type="text" readonly> {{ usrdetail["username"] }} </text>
+          <text class="form-control" type="text"  readonly> {{ usrdetail['email'] }} </text>         
         </div>
       </div>
-      <div class="offset-8.5 col-sm-4 border">
-        <div class="card info" >
-          <img class="card-img-top" src="/static/images/user.png" alt="Image">
-          <div class="card-body">
-            <text class="form-control" type="text" readonly> {{ usrdetail["username"] }} </text>
-            <text class="form-control" type="text"  readonly> {{ usrdetail['email'] }} </text>         
-          </div>
-        </div>
-      </div>
-    </div>  
-  </div>
-  
-  {% endblock %}
+    </div>
+  </div>  
+</div>
+
+{% endblock %}

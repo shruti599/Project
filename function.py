@@ -5,6 +5,9 @@ from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 import docx2txt
+import numpy as np
+import chardet
+
 
 def extract_text_from_pdf(pdf_path):
     # path = 'static/uploaded_files/Stress_Management.pdf'
@@ -48,3 +51,10 @@ def get_image_name(img):
 def get_image_path(img):
     path = "/static/images/"+img+".jpg"
     return path
+
+def encoding_decoding(content):
+    encoded_content = content.encode('utf-8', errors="replace")
+    guessed_encode = chardet.detect(encoded_content)['encoding']
+    decoded_content = encoded_content.decode(guessed_encode, errors="replace")
+    return decoded_content
+#    print("type and its guess encoded",type(content), result)

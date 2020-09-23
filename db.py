@@ -6,6 +6,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import socket
 import ast
+from datetime import datetime, date
+
 # from email.message import EmailMessage
 
 myserver = pymongo.MongoClient("mongodb://localhost:27017")
@@ -48,6 +50,8 @@ def insert_precord(username,email):
         return 1
 
 def insert_srecord(mail, o_content):
+    # date = date.today().strftime("%d/%m/%Y")
+    # time = datetime.time(datetime.now())
     value = {'email': mail, 'Orignal_content': o_content}
     # 'Modified_content': m_content}
     y = Users_Content.insert_one(value)
@@ -55,6 +59,8 @@ def insert_srecord(mail, o_content):
     return 1
 
 def insert_modified_content(mail, m_content):
+    # date = date.today().strftime("%d/%m/%Y")
+    # time = datetime.time(datetime.now())
     q = {'email' : mail}
     value = {'Modified_content' : m_content}
     user = Users_Content.update_one(q, {"$set":value})
@@ -85,6 +91,9 @@ def insert_password(mail, sequence, img):
     if img and mail and sequence:
         a = duplicate_mail(mail)
         q = {'email':mail}
+        today = date.today()
+        # tdate = today.strftime("%d/%m/%Y")
+        # ttime = datetime.time(datetime.now())
         if a != None:
             value={'password': sequence , 'image_name': img}
             b = Users_Detail.update_many(q,{"$set":value, "$currentDate":{"lastModified":True}})
@@ -193,13 +202,34 @@ def all_user():
     q = Users_Detail.find()
     return q
 
+# all_user()
 
-# def delete():
-#     q = {'email' : "shrmsh.1999@gmail.com"}
-#     a = Users_Content.delete_many(q)
-#     print("deleted")
+def count_specific_user(mail):
+    q = {'email':mail}
+    usr = Users_Content.find(q).count()
+    print(usr)
+    return usr
+
+def content_detail_specific_user(mail):
+    q = {'email': mail}
+    detail = Users_Content.find(q)
+    # for i in detail:    
+    return detail
+
+# content_detail_specific_user('shrmsh.1999@gmail.com')
+
+def delete():
+    q = {'email' : "shrmsh.1999@gmail.com"}
+    a = Users_Detail.delete_one(q)
+    print("deleted")
 
 # delete()
+# def delete_user():
+#     a = Users_Detail.drop()
+#     print("delete")
+
+# delete_user()
 
 # password_checker('shrmsh.1999@gmail.com',[238 ,255])
 # display()
+

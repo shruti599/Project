@@ -3,18 +3,19 @@ from werkzeug.utils import secure_filename
 from summarize import summarize
 import os
 import json
-from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text
+from function import extract_text_from_pdf, get_image_name, get_image_path, extract_text, encoding_decoding
 import re
-from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password, insert_modified_content, insert_summary, particular_user_contents, total_document, all_user
+from db import insert_precord, insert_srecord, duplicate_mail, insert_password, mail_for_main, password_checker, passowrd_set_or_not, mail_for_password, insert_modified_content, insert_summary, particular_user_contents, total_document, all_user, count_specific_user, content_detail_specific_user
 
 
 UPLOAD_FOLDER = 'static/uploaded_files'
 ALLOWED_EXTENSIONS = set(['txt','pdf','doc','docx'])
+FILES_FOLDER = 'static/file'
 
 app=Flask(__name__)
 app.secret_key="hello"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+app.config['FILES_FOLDER'] = FILES_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -22,6 +23,10 @@ def allowed_file(filename):
 @app.route('/upload/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
+
+@app.route('/files/<filename>')
+def files(filename):
+    return send_from_directory(app.config['FILES_FOLDER'],filename)
 
 #global variables    
 logged_in = False
@@ -236,17 +241,20 @@ def main():
             filename = secure_filename(file.filename)
             print(os.path.exists(app.config['UPLOAD_FOLDER']))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(filename)
+            print("filename",filename)
+            print("file",file)
             ext = filename.rsplit('.',1)[1]
             # print("ext"+ext)
             if ext == 'pdf':
                 contents = extract_text_from_pdf('static\\uploaded_files\\' + filename)
                 if contents != None:
-                    
+                    # saving_original_file(mail, contents, filename)
                     result = insert_srecord(mail, contents)
                 return render_template('main.html', content = contents)
             else:
                 contents = extract_text('static\\uploaded_files\\' + filename)
+                # encoding_decoding(contents)
+                # saving_original_file(mail, contents, filename)
                 result = insert_srecord(mail, contents)
                 return render_template('main.html', content = contents)
     else:
@@ -257,6 +265,30 @@ def main():
         else:
             print(logged_in)
             return render_template('login.html')
+
+# def to_know_encoding(cont):
+
+
+
+# def saving_original_file(mail, cont, filename):
+#     # file_no = specific_user(mail)
+#     # file_no = file_no + 1
+#     filename = filename.split('.')[0] + ".txt"
+#     file_name = filename
+#     completeFile = os.path.join(FILES_FOLDER, file_name)
+#     file_data = encoding_decoding(cont)
+#     text_file = open(completeFile, "w")
+#     original = text_file.write(file_data)
+#     # with open(file_name) as f:
+#     #     print(f.enconding)
+#     #     original = f.encoding
+#     text_file.close()
+#     result = insert_srecord(mail, original)
+#     if result == 1:
+#         print("Successfully original added")
+#     else:
+#         print("oops!")
+
 
 @app.route('/text_result' ,methods = ['GET', 'POST'])
 def text_result():
@@ -294,8 +326,10 @@ def text_result():
 def userdash():
     global logged_email
     mail = logged_email
+    noc = count_specific_user(mail) #
     user_detail = duplicate_mail(mail)
-    content_detail = particular_user_contents(mail)
+    content_detail = content_detail_specific_user(mail)
+    print("user content detail",content_detail)
     return render_template('userdash.html', usrdetail = user_detail, contdetail = content_detail)
 
 @app.route('/useraccount')
@@ -314,7 +348,7 @@ def admin():
 def admin_dash():
     count = total_document()
     user_detail = all_user()
-    return render_template('admindash.html', total = count, users = user_detail)
+    return render_template('admindash.html', users = user_detail)
 
 @app.route('/about', methods=['GET','POST'])
 def about():

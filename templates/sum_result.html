@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'userlayout.html' %}
 {% block cs %}
 
 
@@ -10,7 +10,7 @@
             <div class="form-group">
                 <label for="results">Results</label>
                 {% if results %}
-                <textarea class="form-control" name="results" id="results" rows="8" cols="8">{{results['summary']}}</textarea>
+                <textarea class="form-control" name="results" id="results" rows="13" cols="8" readonly scroll style="resize:none">{{results['summary']}}</textarea>
                 {% else %}
                 <div id="result"></div>
                 {% endif %}
